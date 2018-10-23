@@ -22,6 +22,28 @@
   (major1) == 4 && (major2) == 10 && (minor) <= 0)
 #endif /* MIN_VERSION_base */
 
+/* package gloss-1.11.1.1 */
+#ifndef VERSION_gloss
+#define VERSION_gloss "1.11.1.1"
+#endif /* VERSION_gloss */
+#ifndef MIN_VERSION_gloss
+#define MIN_VERSION_gloss(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  11 || \
+  (major1) == 1 && (major2) == 11 && (minor) <= 1)
+#endif /* MIN_VERSION_gloss */
+
+/* package random-1.1 */
+#ifndef VERSION_random
+#define VERSION_random "1.1"
+#endif /* VERSION_random */
+#ifndef MIN_VERSION_random
+#define MIN_VERSION_random(major1,major2,minor) (\
+  (major1) <  1 || \
+  (major1) == 1 && (major2) <  1 || \
+  (major1) == 1 && (major2) == 1 && (minor) <= 0)
+#endif /* MIN_VERSION_random */
+
 /* tool alex-3.2.1 */
 #ifndef TOOL_VERSION_alex
 #define TOOL_VERSION_alex "3.2.1"
