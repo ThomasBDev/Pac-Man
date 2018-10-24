@@ -21,7 +21,7 @@ main = playIO displayWindow -- Or FullScreen
               update             -- Step function
               
 displayWindow :: Display
-displayWindow = InWindow "Pac Man" (600, 600) (100, 100)
+displayWindow = InWindow "Pac Man" (windowWidth, windowHeight) (100, 100)
 
 -- step functie wordt elke frame aangeroepen.
 

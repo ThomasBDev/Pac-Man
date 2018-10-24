@@ -13,6 +13,15 @@ eatPacDot D = C
 eatPacDot P = C
 eatPacDot x = x
 
+
+
+windowWidth, windowHeight, levelWidth, levelHeight, fieldWidth :: Float
+windowWidth  = 600
+windowHeight = 600
+levelWidth   = length (testLevel !! 0)
+levelHeight  = length testLevel
+fieldWidth   = windowWidth / levelWidth
+
 data Field = C --Corridor
            | D --Dot
            | P --PowerDot

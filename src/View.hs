@@ -5,6 +5,27 @@ module View where
 import Graphics.Gloss
 import Model
 
+import Level
+
+wall, teleporter, home :: Picture
+wall       = color blue (rectangleSolid fieldWidth fieldWidth)
+teleporter = color orange (thickCircle 5 (fieldWidth / 2))
+home       = color green (arc 30 (-30) (fieldWidth / 2))
+
+pacMan :: Picture
+pacMan = color yellow (circleSolid 100)
+
+-- spr_pacman.bmp heeft 300 x 300 pixels.
+pacManSprite :: IO Picture
+pacManSprite = loadBMP "spr_pacman.bmp"
+
+-- loadBMP :: FilePath -> IO Picture
+
+--           width  height ByteString
+-- bitmap :: Int -> Int -> BitmapData -> Bool -> Picture
+
+
+
 draw :: GameState -> IO Picture
 draw = return . viewPure
 
@@ -15,8 +36,8 @@ draw = return . viewPure
 
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> blank
-  ShowANumber n -> color green (text (show n))
+  ShowNothing   -> pacMan
+  ShowANumber n -> color blue (text (show n))
   ShowAChar   c -> color green (text [c])
   
 -- color :: Color -> Picture -> Picture
