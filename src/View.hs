@@ -7,10 +7,44 @@ import Model
 
 import Level
 
-wall, teleporter, home :: Picture
+wall, teleporter, home, dot, powerDot :: Picture
 wall       = color blue (rectangleSolid fieldWidth fieldWidth)
-teleporter = color orange (thickCircle 5 (fieldWidth / 2))
-home       = color green (arc 30 (-30) (fieldWidth / 2))
+teleporter = color orange (thickCircle (fieldWidth / 4) 10)
+home       = color violet (arc 120 (-30) (fieldWidth / 2))
+dot        = color aquamarine (thickCircle (fieldWidth / 10) 2)
+powerDot   = color cyan (thickCircle (fieldWidth / 5) 5)
+
+-- thickCircle radius thickness
+
+buildTile :: Float -> Float -> Field -> Picture
+buildTile x y W = translate x y wall
+buildTile x y T = translate x y teleporter
+buildTile x y H = translate x y home
+buildTile x y D = translate x y dot
+buildTile x y P = translate x y powerDot
+buildTile _ _ _ = blank
+
+buildRow :: Float -> Float -> Row -> [Picture]
+buildRow _ _ []             = []
+buildRow x y (field:fields) = buildTile x y field : buildRow (x + fieldWidth) y fields
+
+buildLevel :: Float -> Float -> Level -> [[Picture]]
+buildLevel _ _ []         = []
+buildLevel x y (row:rows) = buildRow x y row : buildLevel x (y - fieldWidth) rows
+
+constructedRow :: Picture
+constructedRow = pictures (buildRow offsetX offsetY row13Walls)
+               where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
+                     offsetY = (windowHeight / 2) - (fieldWidth / 2)
+
+constructedLevel :: Picture
+constructedLevel = pictures (map pictures (buildLevel offsetX offsetY testLevel))
+               where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
+                     offsetY = (windowHeight / 2) - (fieldWidth / 2)
+
+-- N = +y
+-- E = +x
+
 
 pacMan :: Picture
 pacMan = color yellow (circleSolid 100)
@@ -36,7 +70,7 @@ draw = return . viewPure
 
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> pacMan
+  ShowNothing   -> constructedLevel
   ShowANumber n -> color blue (text (show n))
   ShowAChar   c -> color green (text [c])
   

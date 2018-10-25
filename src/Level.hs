@@ -15,12 +15,19 @@ eatPacDot x = x
 
 
 
-windowWidth, windowHeight, levelWidth, levelHeight, fieldWidth :: Float
-windowWidth  = 600
-windowHeight = 600
+fieldWidth :: Float
+fieldWidth = 50
+
+windowWidth, windowHeight :: Float
+windowWidth  = 650
+windowHeight = 650
+-- windowWidth, windowHeight :: Int
+-- windowWidth  = 650
+-- windowHeight = 650
+
+levelWidth, levelHeight :: Int
 levelWidth   = length (testLevel !! 0)
 levelHeight  = length testLevel
-fieldWidth   = windowWidth / levelWidth
 
 data Field = C --Corridor
            | D --Dot
