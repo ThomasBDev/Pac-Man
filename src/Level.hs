@@ -35,6 +35,8 @@ data Field = C --Corridor
            | W --Wall
            | T --Teleporter
            | H --Home
+           | S --Pac-Man spawn
+           deriving Eq
 
 instance Show Field where
     show C = " "
@@ -43,6 +45,7 @@ instance Show Field where
     show W = "#"
     show T = "*"
     show H = "_"
+    show S = "S"
     
 type Level = [Row]
 type Row   = [Field]
@@ -66,7 +69,7 @@ testLevel = [ row13Walls,
               [W] ++ row3Dots ++ [W, W, C, W, W] ++ row3Dots ++ [W],
               [T, C, W, C, W, H, H, H, W, C, W, C, T],
               [W] ++ row3Dots++ row5Walls ++ row3Dots ++ [W],
-              [W, C, W] ++ row7Corridors ++ [W, C, W],
+              [W, C, W] ++ row3Corridors ++ [S] ++ row3Corridors ++ [W, C, W],
               [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
               [W, P] ++ row9Dots ++ [P, W],
               row13Walls ]

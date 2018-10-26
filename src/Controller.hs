@@ -8,6 +8,8 @@ import Enemies
 import Player
 import Level
 
+import Data.List
+
 import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import System.Random
@@ -46,3 +48,10 @@ data Direction = North
                | East
                | South
                | West
+
+-- Level = [Row], dus Position = y-coordinaat x-coordinaat
+pacManPosition = Position 8 7
+
+selectPacMan :: Level -> Field -> Maybe Int
+selectPacMan level field = elemIndex field singleList
+                         where singleList = concat level

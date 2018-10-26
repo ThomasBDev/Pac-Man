@@ -7,12 +7,13 @@ import Model
 
 import Level
 
-wall, teleporter, home, dot, powerDot :: Picture
+wall, teleporter, home, dot, powerDot, pacMan :: Picture
 wall       = color blue (rectangleSolid fieldWidth fieldWidth)
 teleporter = color orange (thickCircle (fieldWidth / 4) 10)
 home       = color violet (arc 120 (-30) (fieldWidth / 2))
 dot        = color aquamarine (thickCircle (fieldWidth / 10) 2)
 powerDot   = color cyan (thickCircle (fieldWidth / 5) 5)
+pacMan     = color yellow (thickArc 40 (-40) (fieldWidth / 5) 20)
 
 -- thickCircle radius thickness
 
@@ -22,6 +23,7 @@ buildTile x y T = translate x y teleporter
 buildTile x y H = translate x y home
 buildTile x y D = translate x y dot
 buildTile x y P = translate x y powerDot
+buildTile x y S = translate x y pacMan
 buildTile _ _ _ = blank
 
 buildRow :: Float -> Float -> Row -> [Picture]
@@ -41,17 +43,20 @@ constructedLevel :: Picture
 constructedLevel = pictures (map pictures (buildLevel offsetX offsetY testLevel))
                where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                      offsetY = (windowHeight / 2) - (fieldWidth / 2)
+                     
+variableLevel :: Picture
+variableLevel = constructedLevel
 
 -- N = +y
 -- E = +x
 
 
-pacMan :: Picture
-pacMan = color yellow (circleSolid 100)
+-- pacMan :: Picture
+-- pacMan = color yellow (circleSolid 100)
 
--- spr_pacman.bmp heeft 300 x 300 pixels.
-pacManSprite :: IO Picture
-pacManSprite = loadBMP "spr_pacman.bmp"
+-- -- spr_pacman.bmp heeft 300 x 300 pixels.
+-- pacManSprite :: IO Picture
+-- pacManSprite = loadBMP "spr_pacman.bmp"
 
 -- loadBMP :: FilePath -> IO Picture
 
@@ -71,7 +76,7 @@ draw = return . viewPure
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
   ShowNothing   -> constructedLevel
-  ShowANumber n -> color blue (text (show n))
+  ShowANumber n -> constructedLevel   --variableLevel + translated pacMan = huidige levelstate?
   ShowAChar   c -> color green (text [c])
   
 -- color :: Color -> Picture -> Picture
