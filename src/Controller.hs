@@ -55,3 +55,39 @@ pacManPosition = Position 8 7
 selectPacMan :: Level -> Field -> Maybe Int
 selectPacMan level field = elemIndex field singleList
                          where singleList = concat level
+{-                         
+-- Update de level array met de nieuwe positie van pac man
+updatepacMan :: Level -> Int -> Direction -> Level
+updatepacMan _ Nothing _ = Nothing
+updatepacMan xs y d | checkWall (xs y d) = movePac xs y d
+                    | otherwise          = xs
+            where
+            singleList = concat xs -- Geen idee hoe je de huidige waarde aanpast. recursief?
+            movePac xs y d | d == North = Nothing
+                           | d == East  = Nothing 
+                           | d == South = Nothing
+                           | d == West  = Nothing
+
+-- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
+checkWall :: Level -> Int -> Direction -> Bool
+checkWall _ Nothing _ = Nothing
+checkWall xs y d | d == North = (singleList !! (y - 13)) == not W
+                 | d == East  = (singleList !! (y + 1))  == not W
+                 | d == South = (singleList !! (y + 13)) == not W
+                 | d == West  = (singleList !! (y - 1))  == not W
+            where 
+            singleList = concat xs
+             -}
+             
+             
+             
+             
+             
+             
+             
+             
+             
+             
+                         
+                         
+                         
