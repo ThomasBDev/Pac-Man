@@ -42,7 +42,10 @@ inputKey _ gstate = gstate -- Otherwise keep the same
 data Creature = Player Bool Position
               | Ghost Bool Bool Position
            
-data Position = Position Float Float
+data Position = Position Int Int
+
+instance Show Position where
+    show (Position x y) = show x ++ " " ++ show y
 
 data Direction = North
                | East
@@ -53,10 +56,18 @@ data Direction = North
 -- Level = [Row], dus Position = y-coordinaat x-coordinaat
 pacManPosition = Position 8 7
 
-selectPacMan :: Level -> Field -> Maybe Int
-selectPacMan level field = elemIndex field singleList
-                         where singleList = concat level
-                        
+
+selectPacMan :: Level -> Maybe Int
+selectPacMan level = elemIndex S singleList
+                   where singleList = concat level
+                         
+currentPacManPosition :: Maybe Int -> Position
+currentPacManPosition Nothing      = Position 0 0
+currentPacManPosition (Just index) = Position x y
+                                   where x = index `mod` levelWidth
+                                         y = index `div` levelWidth
+                                         
+
 -- Update de level array met de nieuwe positie van pac man
 updatepacMan :: Level -> Maybe Int -> Direction -> Level
 updatepacMan lvl Nothing _ = lvl
@@ -73,7 +84,6 @@ updatepacMan lvl (Just pos) d | checkWall lvl pos d = singleToLevel (movePac sin
 
 -- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
 checkWall :: Level -> Int -> Direction -> Bool
-
 checkWall lvl y d | d == North = (singleList !! (y - 13)) ==  W
                   | d == East  = (singleList !! (y + 1))  ==  W
                   | d == South = (singleList !! (y + 13)) ==  W
@@ -94,12 +104,3 @@ splitEvery _ [] = []
 splitEvery n xs = ys : splitEvery n zs 
           where (ys,zs) = splitAt n xs             
              
-             
-             
-             
-             
-             
-             
-                         
-                         
-                         
