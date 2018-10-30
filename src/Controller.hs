@@ -42,7 +42,10 @@ inputKey _ gstate = gstate -- Otherwise keep the same
 data Creature = Player Bool Position
               | Ghost Bool Bool Position
            
-data Position = Position Float Float
+data Position = Position Int Int
+
+instance Show Position where
+    show (Position x y) = show x ++ " " ++ show y
 
 data Direction = North
                | East
@@ -52,9 +55,16 @@ data Direction = North
 -- Level = [Row], dus Position = y-coordinaat x-coordinaat
 pacManPosition = Position 8 7
 
-selectPacMan :: Level -> Field -> Maybe Int
-selectPacMan level field = elemIndex field singleList
-                         where singleList = concat level
+selectPacMan :: Level -> Maybe Int
+selectPacMan level = elemIndex S singleList
+                   where singleList = concat level
+                         
+currentPacManPosition :: Maybe Int -> Position
+currentPacManPosition Nothing      = Position 0 0
+currentPacManPosition (Just index) = Position x y
+                                   where x = index `mod` levelWidth
+                                         y = index `div` levelWidth
+                                         
 {-                         
 -- Update de level array met de nieuwe positie van pac man
 updatepacMan :: Level -> Int -> Direction -> Level
@@ -78,16 +88,3 @@ checkWall xs y d | d == North = (singleList !! (y - 13)) == not W
             where 
             singleList = concat xs
              -}
-             
-             
-             
-             
-             
-             
-             
-             
-             
-             
-                         
-                         
-                         
