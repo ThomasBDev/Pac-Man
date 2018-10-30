@@ -8,12 +8,17 @@ printLevel rows = putStrLn result
 printRow :: Row -> String
 printRow row = concat (map show row) ++ "\n"
 
+{-
 eatPacDot :: Field -> Field
 eatPacDot D = C
 eatPacDot P = C
 eatPacDot x = x
+-}
 
-
+teleportPacMan :: Int -> Int
+teleportPacMan xTeleporter | xTeleporter == 0                = levelWidth - 2
+                           | xTeleporter == (levelWidth - 1) = 1
+                           | otherwise                       = -1
 
 fieldWidth :: Float
 fieldWidth = 50
@@ -61,7 +66,7 @@ row9Dots = [D, D, D, D, D, D, D, D, D]
 row7Dots = [D, D, D, D, D, D, D]
 row3Dots = [D, D, D]
            
-testLevel, testEatenDots :: Level
+testLevel :: Level
 testLevel = [ row13Walls,
               [W, P] ++ row9Dots ++ [P, W],
               [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
@@ -73,7 +78,7 @@ testLevel = [ row13Walls,
               [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
               [W, P] ++ row9Dots ++ [P, W],
               row13Walls ]
-testEatenDots = map (map eatPacDot) testLevel
+--testEatenDots = map (map eatPacDot) testLevel
 
 
 

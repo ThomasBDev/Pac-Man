@@ -48,6 +48,7 @@ data Direction = North
                | East
                | South
                | West
+               deriving Eq
 
 -- Level = [Row], dus Position = y-coordinaat x-coordinaat
 pacManPosition = Position 8 7
@@ -55,32 +56,43 @@ pacManPosition = Position 8 7
 selectPacMan :: Level -> Field -> Maybe Int
 selectPacMan level field = elemIndex field singleList
                          where singleList = concat level
-{-                         
+                        
 -- Update de level array met de nieuwe positie van pac man
-updatepacMan :: Level -> Int -> Direction -> Level
-updatepacMan _ Nothing _ = Nothing
-updatepacMan xs y d | checkWall (xs y d) = movePac xs y d
-                    | otherwise          = xs
+updatepacMan :: Level -> Maybe Int -> Direction -> Level
+updatepacMan lvl Nothing _ = lvl
+updatepacMan lvl (Just pos) d | checkWall lvl pos d = singleToLevel (movePac singleList pos d)
+                              | otherwise          = lvl
             where
-            singleList = concat xs -- Geen idee hoe je de huidige waarde aanpast. recursief?
-            movePac xs y d | d == North = Nothing
-                           | d == East  = Nothing 
-                           | d == South = Nothing
-                           | d == West  = Nothing
+            singleList = concat lvl 
+            addCorridor xs y = replaceAtN y C xs 
+            singleToLevel xs = splitEvery 13 xs 
+            movePac xs y d | d == North = replaceAtN (y - 13) S xs
+                           | d == East  = replaceAtN (y + 1) S xs
+                           | d == South = replaceAtN (y + 13) S xs
+                           | d == West  = replaceAtN (y - 1) S xs
 
 -- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
 checkWall :: Level -> Int -> Direction -> Bool
-checkWall _ Nothing _ = Nothing
-checkWall xs y d | d == North = (singleList !! (y - 13)) == not W
-                 | d == East  = (singleList !! (y + 1))  == not W
-                 | d == South = (singleList !! (y + 13)) == not W
-                 | d == West  = (singleList !! (y - 1))  == not W
-            where 
-            singleList = concat xs
-             -}
+
+checkWall lvl y d | d == North = (singleList !! (y - 13)) ==  W
+                  | d == East  = (singleList !! (y + 1))  ==  W
+                  | d == South = (singleList !! (y + 13)) ==  W
+                  | d == West  = (singleList !! (y - 1))  ==  W
+                  where 
+                  singleList = concat lvl
+checkWall _ _ _   = False
+                  
              
              
+replaceAtN :: Int -> a -> [a] -> [a]
+replaceAtN _ _ [] = []
+replaceAtN n y (x:xs) | n == 0    = y:xs
+                      | otherwise = x:replaceAtN (n-1) y xs          
              
+splitEvery :: Int -> [a] -> [[a]]
+splitEvery _ [] = []
+splitEvery n xs = ys : splitEvery n zs 
+          where (ys,zs) = splitAt n xs             
              
              
              

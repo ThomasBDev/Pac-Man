@@ -8,3 +8,6 @@ ghostCombo = 0
 
 score :: Int
 score = 0
+
+eatPacDot :: Int -> Int
+eatPacDot s = s + 100
