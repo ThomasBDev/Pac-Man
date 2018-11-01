@@ -7,13 +7,15 @@ import Model
 
 import Level
 
-wall, teleporter, home, dot, powerDot, pacMan :: Picture
-wall       = color blue (rectangleSolid fieldWidth fieldWidth)
-teleporter = color orange (thickCircle (fieldWidth / 4) 10)
-home       = color violet (arc 120 (-30) (fieldWidth / 2))
-dot        = color aquamarine (thickCircle (fieldWidth / 10) 2)
-powerDot   = color cyan (thickCircle (fieldWidth / 5) 5)
-pacMan     = color yellow (thickArc 40 (-40) (fieldWidth / 5) 20)
+wall, teleporter, home, dot, powerDot, pacMan, beginScreen :: Picture
+wall        = color blue (rectangleSolid fieldWidth fieldWidth)
+teleporter  = color orange (thickCircle (fieldWidth / 4) 10)
+home        = color violet (arc 120 (-30) (fieldWidth / 2))
+dot         = color aquamarine (thickCircle (fieldWidth / 10) 2)
+powerDot    = color cyan (thickCircle (fieldWidth / 5) 5)
+pacMan      = color yellow (thickArc 40 (-40) (fieldWidth / 5) 20)
+                                          -- fromIntegral zet (o.a.) Int's om in Floats.
+beginScreen = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 
 -- thickCircle radius thickness
 
@@ -39,13 +41,15 @@ constructedRow = pictures (buildRow offsetX offsetY row13Walls)
                where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                      offsetY = (windowHeight / 2) - (fieldWidth / 2)
 
-constructedLevel :: Picture
+constructedLevel :: Level -> Picture
 constructedLevel level = pictures (map pictures (buildLevel offsetX offsetY level))
                        where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                              offsetY = (windowHeight / 2) - (fieldWidth / 2)
-                     
+ 
+{- 
 variableLevel :: Picture
 variableLevel = constructedLevel
+-}
 
 -- N = +y
 -- E = +x
@@ -75,7 +79,7 @@ draw = return . viewPure
 
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> constructedLevel
+  ShowNothing   -> beginScreen
   ShowANumber n -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
   ShowAChar   c -> color green (text [c])
   

@@ -31,8 +31,8 @@ windowHeight = 650
 -- windowHeight = 650
 
 levelWidth, levelHeight :: Int
-levelWidth   = length (testLevel !! 0)
-levelHeight  = length testLevel
+levelWidth  = length (testLevel !! 0)
+levelHeight = length testLevel
 
 data Field = C --Corridor
            | D --Dot

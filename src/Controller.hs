@@ -21,7 +21,7 @@ update secs gstate
   = -- We show a new random number
     do randomNumber <- randomIO
        let newNumber = abs randomNumber `mod` 10
-       return $ GameState (ShowANumber newNumber) testLevel 0
+       return $ GameState (ShowANumber newNumber) (currentLevel gstate) 0
   | otherwise
   = -- Just update the elapsed time
     return $ gstate { elapsedTime = elapsedTime gstate + secs }
@@ -36,10 +36,10 @@ inputKey (EventKey (Char c) _ _ _) gstate
     gstate { infoToShow = ShowAChar c }
 
 -- Poging om Pac-Man te bewegen met de pijltjestoetsen.
-inputKey (EventKey (SpecialKey KeyUp) _ _ _)    gstate = gstate { currentLevel = updatedLevel North }
-inputKey (EventKey (SpecialKey KeyRight) _ _ _) gstate = gstate { currentLevel = updatedLevel East }
-inputKey (EventKey (SpecialKey KeyDown) _ _ _)  gstate = gstate { currentLevel = updatedLevel South }
-inputKey (EventKey (SpecialKey KeyLeft) _ _ _)  gstate = gstate { currentLevel = updatedLevel West }
+inputKey (EventKey (SpecialKey KeyUp) Down _ _)    gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) North }
+inputKey (EventKey (SpecialKey KeyRight) Down _ _) gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) East }
+inputKey (EventKey (SpecialKey KeyDown) Down _ _)  gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) South }
+inputKey (EventKey (SpecialKey KeyLeft) Down _ _)  gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) West }
     
 inputKey _ gstate = gstate -- Otherwise keep the same
 
@@ -83,15 +83,17 @@ testUpdate dir = printLevel updatedLevel
  
 
  
+{-
 updatedLevel1, updatedLevel2, updatedLevel3, updatedLevel4 :: Level
 updatedLevel1 = updatedLevel North
 updatedLevel2 = updatedLevel East
 updatedLevel3 = updatedLevel South
 updatedLevel4 = updatedLevel West
+-}
 
-updatedLevel :: Direction -> Level
-updatedLevel dir = updatePacMan testLevel pacManIndex dir
-                 where pacManIndex = selectPacMan testLevel
+updatedLevel :: Level -> Direction -> Level
+updatedLevel level dir = updatePacMan level pacManIndex dir
+                       where pacManIndex = selectPacMan level
  
 
  
