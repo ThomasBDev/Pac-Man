@@ -40,9 +40,9 @@ constructedRow = pictures (buildRow offsetX offsetY row13Walls)
                      offsetY = (windowHeight / 2) - (fieldWidth / 2)
 
 constructedLevel :: Picture
-constructedLevel = pictures (map pictures (buildLevel offsetX offsetY testLevel))
-               where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
-                     offsetY = (windowHeight / 2) - (fieldWidth / 2)
+constructedLevel level = pictures (map pictures (buildLevel offsetX offsetY level))
+                       where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
+                             offsetY = (windowHeight / 2) - (fieldWidth / 2)
                      
 variableLevel :: Picture
 variableLevel = constructedLevel
@@ -76,7 +76,7 @@ draw = return . viewPure
 viewPure :: GameState -> Picture
 viewPure gstate = case infoToShow gstate of
   ShowNothing   -> constructedLevel
-  ShowANumber n -> constructedLevel   --variableLevel + translated pacMan = huidige levelstate?
+  ShowANumber n -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
   ShowAChar   c -> color green (text [c])
   
 -- color :: Color -> Picture -> Picture

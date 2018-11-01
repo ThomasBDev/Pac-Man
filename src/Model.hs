@@ -2,6 +2,8 @@
 --   which represent the state of the game
 module Model where
 
+import Level
+
 data InfoToShow = ShowNothing
                 | ShowANumber Int
                 | ShowAChar   Char
@@ -10,8 +12,9 @@ nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 5
 
 data GameState = GameState {
-                   infoToShow  :: InfoToShow
-                 , elapsedTime :: Float
+                   infoToShow   :: InfoToShow
+                 , currentLevel :: Level
+                 , elapsedTime  :: Float
                  }
                  
 -- data GameState = Title
@@ -20,4 +23,4 @@ data GameState = GameState {
                -- | GameOver
 
 initialState :: GameState
-initialState = GameState ShowNothing 0
+initialState = GameState ShowNothing testLevel 0
