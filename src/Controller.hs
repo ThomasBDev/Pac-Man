@@ -72,23 +72,43 @@ currentPacManPosition (Just index) = Position x y
 testUpdate :: Direction -> IO()
 testUpdate dir = printLevel updatedLevel
                where pacManIndex  = selectPacMan testLevel
-                     updatedLevel = updatepacMan testLevel pacManIndex dir
-                                         
--- Update de level array met de nieuwe positie van pac man
-updatepacMan :: Level -> Maybe Int -> Direction -> Level
-updatepacMan lvl Nothing _    = [[]]
-updatepacMan lvl (Just pos) d | checkWall lvl pos d = lvl
-                              | otherwise           = singleToLevel (movePac singleList pos d)
-                              where singleList       = concat lvl 
-                                    addCorridor xs y = replaceAtN y C xs 
-                                    singleToLevel xs = splitEvery 13 xs 
-                                    movePac xs y d   | d == North = replaceAtN (y - 13) S xs
-                                                     | d == East  = replaceAtN (y + 1) S xs
-                                                     | d == South = replaceAtN (y + 13) S xs
-                                                     | d == West  = replaceAtN (y - 1) S xs
+                     updatedLevel = updatePacMan testLevel pacManIndex dir
+ 
 
-                           
-                           
+ 
+updatedLevel1, updatedLevel2, updatedLevel3, updatedLevel4 :: Level
+updatedLevel1 = updatedLevel North
+updatedLevel2 = updatedLevel East
+updatedLevel3 = updatedLevel South
+updatedLevel4 = updatedLevel West
+
+updatedLevel :: Direction -> Level
+updatedLevel dir = updatePacMan testLevel pacManIndex dir
+                 where pacManIndex = selectPacMan testLevel
+ 
+
+ 
+-- Update de level array met de nieuwe positie van pac man
+updatePacMan :: Level -> Maybe Int -> Direction -> Level
+updatePacMan lvl Nothing _    = [[]]
+updatePacMan lvl (Just pos) d | checkWall lvl pos d = lvl
+                              | otherwise           = singleToLevel (movePac singleList pos d)
+                              where singleList       = concat lvl
+                                    singleToLevel xs = splitEvery levelWidth xs
+                                    movePac xs y d   | d == North = replaceAtN2 (y - levelWidth) y S xs
+                                                     | d == East  = replaceAtN1 (y + 1)          y S xs
+                                                     | d == South = replaceAtN1 (y + levelWidth) y S xs
+                                                     | d == West  = replaceAtN2 (y - 1)          y S xs
+                                    {-
+                                    singleToLevel xs = splitEvery 5 xs
+                                    movePac xs y d   | d == North = replaceAtN2 (y - 5) y S xs
+                                                     | d == East  = replaceAtN1 (y + 1) y S xs
+                                                     | d == South = replaceAtN1 (y + 5) y S xs
+                                                     | d == West  = replaceAtN2 (y - 1) y S xs
+                                                     -}
+
+
+
 testCheck :: Direction -> Bool
 testCheck dir = checkWall testLevel pacManIndex dir
               where pacManIndex = removeMaybe (selectPacMan testLevel)
@@ -98,27 +118,44 @@ removeMaybe (Just x) = x
                            
 -- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
 checkWall :: Level -> Int -> Direction -> Bool
-checkWall lvl y d | d == North = (singleList !! (y - 13)) ==  W
-                  | d == East  = (singleList !! (y + 1))  ==  W
-                  | d == South = (singleList !! (y + 13)) ==  W
-                  | d == West  = (singleList !! (y - 1))  ==  W
+checkWall lvl y d | d == North = (singleList !! (y - levelWidth)) ==  W
+                  | d == East  = (singleList !! (y + 1))          ==  W
+                  | d == South = (singleList !! (y + levelWidth)) ==  W
+                  | d == West  = (singleList !! (y - 1))          ==  W
+{-
+checkWall lvl y d | d == North = (singleList !! (y - 5)) ==  W
+                  | d == East  = (singleList !! (y + 1)) ==  W
+                  | d == South = (singleList !! (y + 5)) ==  W
+                  | d == West  = (singleList !! (y - 1)) ==  W
+                  -}
                   where singleList = concat lvl
 checkWall _ _ _   = False
                   
             
 
+{-
+testReplaceLevel :: Level
+testReplaceLevel = [ [W, C, C, C, W],
+                     [W, C, S, C, W],
+                     [W, C, C, C, W] ]
+            
 testReplaceRow :: Row
-testReplaceRow = [ W, C, C, C, W,
-                   W, C, S, C, W,
-                   W, C, C, C, W ]            
+testReplaceRow = concat testReplaceLevel
+                   
+testReplaceLevelDraw :: Direction -> IO()
+testReplaceLevelDraw dir = printLevel replacedLevel
+                         where replacedLevel = updatePacMan testReplaceLevel pacManIndex dir
+                               pacManIndex   = selectPacMan testReplaceLevel
 
 testReplace :: Direction -> Row
-testReplace North = replaceAtN2 2 7 S testReplaceRow
-                                -- newIndex (oldIndex = newIndex - oldIndex, omdat newIndex in de functie aftelt en niet optelt.)
-testReplace East  = replaceAtN1 8 (8 - 7) S testReplaceRow
-testReplace South = replaceAtN1 12 (12 - 7) S testReplaceRow
-testReplace West  = replaceAtN2 7 6 S testReplaceRow
-            
+testReplace North = replaceAtN2 2  7 S testReplaceRow
+testReplace East  = replaceAtN1 8  7 S testReplaceRow
+testReplace South = replaceAtN1 12 7 S testReplaceRow
+testReplace West  = replaceAtN2 6  7 S testReplaceRow
+-}
+
+
+
 replaceAtN :: Int -> a -> [a] -> [a]
 replaceAtN _ _ []     = []
 replaceAtN n y (x:xs) | n == 0    = y : xs
@@ -128,16 +165,16 @@ replaceAtN n y (x:xs) | n == 0    = y : xs
 -- De functie stopt pas als de nieuwe index "op" is, dus de oude positie komt daarvoor nog langs.
 replaceAtN1 :: Int -> Int -> Field -> Row -> Row
 replaceAtN1 _ _ _ []                          = []
-replaceAtN1 newIndex oldIndex newField (x:xs) | newIndex == 0        = newField : xs
-                                              | newIndex == oldIndex = T : replaceAtN1 (newIndex - 1) oldIndex newField xs
-                                              | otherwise            = x : replaceAtN1 (newIndex - 1) oldIndex newField xs
+replaceAtN1 newIndex oldIndex newField (x:xs) | newIndex == 0 = newField : xs
+                                              | oldIndex == 0 = C : replaceAtN1 (newIndex - 1) (oldIndex - 1) newField xs
+                                              | otherwise     = x : replaceAtN1 (newIndex - 1) (oldIndex - 1) newField xs
                                               
 -- Je moet
 replaceAtN2 :: Int -> Int -> Field -> Row -> Row
 replaceAtN2 _ _ _ []                          = []
-replaceAtN2 newIndex oldIndex newField (x:xs) | newIndex == 0        = newField : xs
-                                              | newIndex == oldIndex = T : replaceAtN2 (newIndex - 1) oldIndex newField xs
-                                              | otherwise            = x : replaceAtN2 (newIndex - 1) oldIndex newField xs
+replaceAtN2 newIndex oldIndex newField (x:xs) | newIndex == 0 = newField : replaceAtN2 (newIndex - 1) (oldIndex - 1) newField xs
+                                              | oldIndex == 0 = C : xs
+                                              | otherwise     = x : replaceAtN2 (newIndex - 1) (oldIndex - 1) newField xs
                                               
 splitEvery :: Int -> [a] -> [[a]]
 splitEvery _ [] = []
