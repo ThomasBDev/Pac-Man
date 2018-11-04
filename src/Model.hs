@@ -4,15 +4,15 @@ module Model where
 
 import Level
 
-data InfoToShow = ShowNothing
-                | ShowANumber Int
-                | ShowAChar   Char
+data TypeOfState = Title
+                 | Playing
+                 | ShowAChar   Char
 
 nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 5
 
 data GameState = GameState {
-                   infoToShow   :: InfoToShow
+                   typeOfState  :: TypeOfState
                  , currentLevel :: Level
                  , elapsedTime  :: Float
                  }
@@ -23,4 +23,4 @@ data GameState = GameState {
                -- | GameOver
 
 initialState :: GameState
-initialState = GameState ShowNothing testLevel 0
+initialState = GameState Title testLevel 0

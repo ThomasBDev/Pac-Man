@@ -78,9 +78,9 @@ draw = return . viewPure
 -- infoToShow gstate == GameOver -> Create Picture with "GAMEOVER".
 
 viewPure :: GameState -> Picture
-viewPure gstate = case infoToShow gstate of
-  ShowNothing   -> beginScreen
-  ShowANumber n -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
+viewPure gstate = case typeOfState gstate of
+  Title         -> beginScreen
+  Playing       -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
   ShowAChar   c -> color green (text [c])
   
 -- color :: Color -> Picture -> Picture
