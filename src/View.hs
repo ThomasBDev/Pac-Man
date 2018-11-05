@@ -7,13 +7,14 @@ import Model
 
 import Level
 
-wall, teleporter, home, dot, powerDot, pacMan, beginScreen :: Picture
+wall, teleporter, home, dot, powerDot, pacMan, beginScreen, ghost :: Picture
 wall        = color blue (rectangleSolid fieldWidth fieldWidth)
 teleporter  = color orange (thickCircle (fieldWidth / 4) 10)
 home        = color violet (arc 120 (-30) (fieldWidth / 2))
 dot         = color aquamarine (thickCircle (fieldWidth / 10) 2)
 powerDot    = color cyan (thickCircle (fieldWidth / 5) 5)
 pacMan      = color yellow (thickArc 40 (-40) (fieldWidth / 5) 20)
+ghost       = color red (rectangleSolid (fieldWidth / 2) (fieldWidth / 2))
                                           -- fromIntegral zet (o.a.) Int's om in Floats.
 beginScreen = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 
@@ -26,6 +27,7 @@ buildTile x y H = translate x y home
 buildTile x y D = translate x y dot
 buildTile x y P = translate x y powerDot
 buildTile x y S = translate x y pacMan
+buildTile x y G = translate x y ghost
 buildTile _ _ _ = blank
 
 buildRow :: Float -> Float -> Row -> [Picture]
@@ -81,7 +83,6 @@ viewPure :: GameState -> Picture
 viewPure gstate = case typeOfState gstate of
   Title         -> beginScreen
   Playing       -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
-  ShowAChar   c -> color green (text [c])
   
 -- color :: Color -> Picture -> Picture
 
