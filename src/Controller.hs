@@ -19,7 +19,7 @@ update secs gstate
   = -- We show a new random number
     -- Dit update het level als een bepaalde tijd voorbij is gegaan.
     -- De Ghosts bewegen altijd, dus hun posities moeten hier worden aangepast?
-       let updatedGhost = updatedLevelGhost (currentLevel gstate) North
+       let updatedGhost = updatedLevelGhost (currentLevel gstate)
        in return $ GameState Playing updatedGhost 0
   | otherwise
   = -- Just update the elapsed time

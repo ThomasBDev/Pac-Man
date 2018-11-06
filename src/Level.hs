@@ -1,6 +1,7 @@
 module Level where
 
 import Data.List
+import System.Random
 
 -- putStrLn neemt een String en tekent de uitkomst in de console.
 printLevel :: Level -> IO ()
@@ -56,6 +57,9 @@ data Direction = North
                | South
                | West
                deriving Eq
+              
+allDirections :: [Direction]
+allDirections = [North, East, South, West]
 
 data Field = C --Corridor
            | D --Dot
@@ -77,15 +81,15 @@ instance Show Field where
     show S = "S"
     show G = "G"
     
-data Position = Position Int Int
+data Position = Pos Int Int
 
 instance Show Position where
-    show (Position x y) = show x ++ " " ++ show y
+    show (Pos x y) = show x ++ " " ++ show y
 
-currentPacManPosition :: Int -> Position
-currentPacManPosition index = Position x y
-                            where x = index `mod` levelWidth
-                                  y = index `div` levelWidth                      
+currentPacManPosition :: Maybe Int -> Position
+currentPacManPosition (Just index) = Pos x y
+                                   where x = index `mod` levelWidth
+                                         y = index `div` levelWidth                      
 
 
 
@@ -136,9 +140,9 @@ replaceAtN2 _ _ _ []                          = []
 replaceAtN2 newIndex oldIndex newField (x:xs) | newIndex == 0 = newField : replaceAtN2 (newIndex - 1) (oldIndex - 1) newField xs
                                               | oldIndex == 0 = C : xs
                                               | otherwise     = x : replaceAtN2 (newIndex - 1) (oldIndex - 1) newField xs
-
-                                              
-                                              
+               
+               
+ 
 data Item = PacDot
           | Fruit
           

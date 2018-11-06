@@ -9,7 +9,7 @@ data TypeOfState = Title
                  | ShowAChar   Char
 
 nO_SECS_BETWEEN_CYCLES :: Float
-nO_SECS_BETWEEN_CYCLES = 2
+nO_SECS_BETWEEN_CYCLES = 1
 
 data GameState = GameState {
                    typeOfState  :: TypeOfState
