@@ -85,37 +85,9 @@ instance Show Position where
 currentPacManPosition :: Int -> Position
 currentPacManPosition index = Position x y
                             where x = index `mod` levelWidth
-                                  y = index `div` levelWidth
+                                  y = index `div` levelWidth                      
 
 
-
-updatedLevel :: Level -> Direction -> Level
-updatedLevel level dir = updatePacMan level pacManIndex dir
-                       where pacManIndex = selectCreature level S
-                       
--- Update de level array met de nieuwe positie van pac man
-updatePacMan :: Level -> Maybe Int -> Direction -> Level
-updatePacMan lvl Nothing _    = [[]]
-updatePacMan lvl (Just pos) d | checkWall lvl pos d       = lvl
-                              | checkTeleporter lvl pos d = singleToLevel (teleportPacMan singleList pos d)
-                              | otherwise                 = singleToLevel (moveCreature singleList pos S d)
-                              where singleList       = concat lvl
-                                    singleToLevel xs = splitEvery levelWidth xs
-
-                                    
-                                    
-updatedLevelGhost :: Level -> Direction -> Level
-updatedLevelGhost level dir = updateGhost level ghostIndex dir
-                            where ghostIndex = selectCreature level G
-  
-updateGhost :: Level -> Maybe Int -> Direction -> Level
-updateGhost lvl Nothing _    = [[]]
-updateGhost lvl (Just pos) d | checkWall lvl pos d = lvl
-                             | otherwise           = singleToLevel (moveCreature singleList pos G d)
-                             where singleList       = concat lvl
-                                   singleToLevel xs = splitEvery levelWidth xs
-                                                     
-                                                     
 
 -- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
 checkWall :: Level -> Int -> Direction -> Bool
@@ -142,15 +114,6 @@ moveCreature currentLevel creatureIndex field North = replaceAtN2 (creatureIndex
 moveCreature currentLevel creatureIndex field East  = replaceAtN1 (creatureIndex + 1)          creatureIndex field currentLevel
 moveCreature currentLevel creatureIndex field South = replaceAtN1 (creatureIndex + levelWidth) creatureIndex field currentLevel
 moveCreature currentLevel creatureIndex field West  = replaceAtN2 (creatureIndex - 1)          creatureIndex field currentLevel
-
-teleportPacMan :: Row -> Int -> Direction -> Row
--- updatePacMan past de positie aan, dus dit gebeurt voordat Pac-Man op de teleporter komt.
--- Als de je naar een teleporter in het Noorden beweegt, dan ligt de nieuwe pacManIndex later in de array dan de oude.
--- North hier --> Gebruik South berekening.
-teleportPacMan currentLevel pacManIndex North = replaceAtN1 (pacManIndex + (levelWidth * (levelHeight - 3))) pacManIndex S currentLevel
-teleportPacMan currentLevel pacManIndex East  = replaceAtN2 (pacManIndex - (levelHeight - 1)) pacManIndex S currentLevel
-teleportPacMan currentLevel pacManIndex South = replaceAtN2 (pacManIndex - (levelWidth * (levelHeight - 3))) pacManIndex S currentLevel
-teleportPacMan currentLevel pacManIndex West  = replaceAtN1 (pacManIndex + (levelHeight - 1)) pacManIndex S currentLevel
 
 
 
