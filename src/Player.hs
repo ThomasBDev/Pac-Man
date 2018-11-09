@@ -14,8 +14,6 @@ score = 0
 eatPacDot :: Int -> Int
 eatPacDot s = s + 100
 
-
-
 updatedLevel :: Level -> Direction -> Level
 updatedLevel level dir = updatePacMan level pacManIndex dir
                        where pacManIndex = selectCreature level S

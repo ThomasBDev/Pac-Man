@@ -30,6 +30,8 @@ input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
+
+--Is dit waar de pacman animatie moet worden toegepast? Met een do methode?
 -- Poging om Pac-Man te bewegen met de pijltjestoetsen.
 inputKey (EventKey (SpecialKey KeyUp) Down _ _)    gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) North }
 inputKey (EventKey (SpecialKey KeyRight) Down _ _) gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) East }

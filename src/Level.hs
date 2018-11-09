@@ -11,7 +11,8 @@ printLevel rows = putStrLn result
 printRow :: Row -> String
 printRow row = concat (map show row) ++ "\n"
 
-
+pacMouth :: Float
+pacMouth = 40
 
 fieldWidth :: Float
 fieldWidth = 50
@@ -113,6 +114,7 @@ checkTeleporter _ _ _   = False
 selectCreature :: Level -> Field -> Maybe Int
 selectCreature level field = elemIndex field (concat level)
 
+-- Deze dient een animatie toegevoegd te krijgen (Dus het moet een paar frames duren en bewegen)
 moveCreature :: Row -> Int -> Field -> Direction -> Row
 moveCreature currentLevel creatureIndex field North = replaceAtN2 (creatureIndex - levelWidth) creatureIndex field currentLevel
 moveCreature currentLevel creatureIndex field East  = replaceAtN1 (creatureIndex + 1)          creatureIndex field currentLevel

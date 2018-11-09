@@ -28,6 +28,9 @@ nextDirection level Chase ghostIndex = shortestWay pacManPosition ghostPosition
                                            pacManPosition = currentPacManPosition pacManIndex
                                            ghostPosition  = currentPacManPosition ghostIndex
                                      
+                                     
+
+-- shortestWay moet willekeurig kiezen tussen de 2 richtingen ex: NE returned North of East
 shortestWay :: Position -> Position -> Direction
                                                   --Pac-Man en Ghost zitten in dezelfde kolom.
 shortestWay (Pos xPac yPac) (Pos xGhost yGhost) | xPac == xGhost = selectDirection 0 yPac yGhost                                                       
