@@ -18,7 +18,7 @@ powerDot    = color cyan (thickCircle (fieldWidth / 5) 5)
 pacMan      = color yellow (thickArc pacMouth (-pacMouth) (fieldWidth / 5) 20)
 ghost       = color red (rectangleSolid (fieldWidth / 2) (fieldWidth / 2))
                                           -- fromIntegral zet (o.a.) Int's om in Floats.
-beginScreen    = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
+beginScreen    = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 gameOverScreen = color white (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 
 buildPacMan :: Float -> Float -> Float -> Picture
@@ -27,6 +27,13 @@ buildPacMan x y variable = translate x y pacManPicture
                          where pacManPicture = color yellow (thickArc (variable * 60) (-variable * 60) (fieldWidth / 5) 20)
                                                             -- thickArc wordt tegen de klok in getekend.
 
+scoretext, highscoretext, begintext, titletext, pausetext, gameovertext :: Picture
+scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text "Score:")))
+highscoretext = translate (-300) (-270) (scale 0.2 0.2 (color red (text "High-Score:")))
+begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
+titletext = translate (-160) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
+pausetext = color red (text "Pause")
+gameovertext = color red (text "Game over")
 -- thickCircle radius thickness
 
 
@@ -55,9 +62,12 @@ buildLevel x y variable (row:rows) = buildRow x y variable row : buildLevel x (y
                      -- offsetY = (windowHeight / 2) - (fieldWidth / 2)
 
 constructedLevel :: GameState -> Picture
-constructedLevel currentGameState = pictures (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState)))
+constructedLevel currentGameState = pictures (scoretext : highscoretext: (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
                                   where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                                         offsetY = (windowHeight / 2) - (fieldWidth / 2)
+                                        
+constructBeginScreen :: Picture
+constructBeginScreen = pictures [beginScreen,pacMan,titletext,begintext,highscoretext]
  
 {- 
 variableLevel :: Picture
@@ -85,15 +95,15 @@ variableLevel = constructedLevel
 draw :: GameState -> IO Picture
 draw = return . viewPure
 
--- infoToShow gstate == Title -> Create Picture with (F.E.) "PRESS START TO PLAY"
+-- infoToShow gstate == Title -> Create Picture with (F.E.) "PRESS START TO PLAY"ture with "PAUSED" over the Level and the update method is disabled.
 -- infoToShow gstate == Playing -> Create Picture with a Level.
--- infoToShow gstate == Paused -> Create Picture with "PAUSED" over the Level and the update method is disabled.
+-- infoToShow gstate == Paused -> Create Pic
 -- infoToShow gstate == GameOver -> Create Picture with "GAMEOVER".
 
 --Geraakt worden door de ghost lijkt al een gameover te creeeren, waar staat dit?
 viewPure :: GameState -> Picture
 viewPure gstate = case typeOfState gstate of
-  Title         -> beginScreen
+  Title         -> constructBeginScreen
   Playing       -> constructedLevel gstate  --variableLevel + translated pacMan = huidige levelstate?
   GameOver      -> gameOverScreen
 -- color :: Color -> Picture -> Picture
