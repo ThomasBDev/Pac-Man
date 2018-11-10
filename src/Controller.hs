@@ -15,9 +15,10 @@ import System.Random
 -- | Handle one iteration of the game
 update :: Float -> GameState -> IO GameState
 update secs gstate
-  | typeOfState gstate == Title    = return gstate
+  | typeOfState gstate == Title    = do highscore <- loadScore
+                                        return $ gstate { currentHighScore = highscore }
   | typeOfState gstate == Paused   = return gstate
-  | typeOfState gstate == GameOver = return gstate
+  | typeOfState gstate == GameOver = do saveScore (currentHighScore gstate)
   
   -- We zitten in de PlayingState en 1 cyclus is voorbij.
   | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
@@ -29,7 +30,7 @@ update secs gstate
           -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
           if (selectCreature (currentLevel gstate) S) == Nothing
           then return $ gstate { typeOfState = GameOver }
-          else return $ GameState Playing updatedGhost 0 (currentScore gstate)
+          else return $ GameState Playing updatedGhost 0 (currentScore gstate) (currentHighScore gstate)
   -- We zitten in de PlayingState, maar de cyclus is nog bezig.
   | otherwise
   = -- Just update the elapsed time
@@ -63,6 +64,7 @@ pacManIndex currentLevel = removeMaybe (selectCreature currentLevel S)
 removeMaybe :: Maybe Int -> Int
 removeMaybe Nothing  = -1
 removeMaybe (Just x) = x
+
 
 
 data Creature = Player Bool Position

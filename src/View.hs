@@ -24,26 +24,33 @@ titleScreen    = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWi
 pausedScreen   = color magenta (translate ((-windowWidth / 2) + 80) 0 (text "PAUSED"))
 gameOverScreen = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
                              
-constructBeginScreen :: Picture
-constructBeginScreen = pictures [titleScreen, pacMan, titletext, begintext, highscoretext]
 
 
 
 scoretext :: Int -> Picture
 scoretext score = translate 0 (-270) (scale 0.2 0.2 (color red (text ("Score: " ++ show score))))
+
+highscoretext :: GameState -> Picture
+highscoretext gstate | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show highscore))))
+                     | otherwise         = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show score))))
+                     where highscore = currentHighScore gstate
+                           score     = currentScore gstate
               
-highscoretext, begintext, titletext, pausetext, gameovertext, returntext :: Picture
-highscoretext | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show highscore))))
-              | otherwise         = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show score))))
+begintext, titletext, pausetext, gameovertext, returntext :: Picture
 begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
 returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
 
-constructPausedScreen :: GameState -> Picture
-constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen]                  
-constructGameoverScreen = pictures [gameOverScreen, gameovertext, returntext]
+
+
+constructBeginScreen, constructPausedScreen :: GameState -> Picture
+constructBeginScreen gstate  = pictures [titleScreen, pacMan, titletext, begintext, (highscoretext gstate)]
+constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen] 
+
+constructGameOverScreen :: Picture
+constructGameOverScreen = pictures [gameOverScreen, gameovertext, returntext]
 
 
 
@@ -74,7 +81,7 @@ buildLevel _ _ _ []                = []
 buildLevel x y variable (row:rows) = buildRow x y variable row : buildLevel x (y - fieldWidth) variable rows
 
 constructLevel :: GameState -> Picture
-constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : highscoretext : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
+constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : (highscoretext currentGameState) : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
                                   where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                                         offsetY = (windowHeight / 2) - (fieldWidth / 2)
  
@@ -99,7 +106,7 @@ draw = return . viewPure
 
 viewPure :: GameState -> Picture
 viewPure gstate = case typeOfState gstate of
-  Title         -> constructBeginScreen
+  Title         -> constructBeginScreen gstate
   Playing       -> constructLevel gstate
   Paused        -> constructPausedScreen gstate
-  GameOver      -> constructGameoverScreen
+  GameOver      -> constructGameOverScreen
