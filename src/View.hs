@@ -27,18 +27,20 @@ gameOverScreen = color white (rectangleSolid ((fromIntegral levelWidth) * fieldW
 constructBeginScreen :: Picture
 constructBeginScreen = pictures [titleScreen, pacMan, titletext, begintext, highscoretext]
 
-scoretext, highscoretext, begintext, titletext, pausetext, gameovertext :: Picture
-scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text "Score: ")))
-highscoretext = translate (-300) (-270) (scale 0.2 0.2 (color red (text "High-Score:")))
+scoretext, highscoretext, begintext, titletext, pausetext, gameovertext, returntext :: Picture
+scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text ("Score: " ++ show score))))
+highscoretext | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show highscore))))
+              | otherwise         = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show score))))
 begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = color red (text "Game over")
+returntext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
 
 constructPausedScreen :: GameState -> Picture
 constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen]
                   
-                  
+constructGameoverScreen = pictures [gameOverScreen, gameovertext, returntext]
 
 buildTile :: Float -> Float -> Field -> Picture
 buildTile x y W = translate x y wall
@@ -95,4 +97,4 @@ viewPure gstate = case typeOfState gstate of
   Title         -> constructBeginScreen
   Playing       -> constructLevel gstate
   Paused        -> constructPausedScreen gstate
-  GameOver      -> gameOverScreen
+  GameOver      -> constructGameoverScreen

@@ -1,7 +1,7 @@
 {-# LANGUAGE CPP #-}
+{-# LANGUAGE NoRebindableSyntax #-}
 {-# LANGUAGE ForeignFunctionInterface #-}
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
-{-# OPTIONS_GHC -fno-warn-implicit-prelude #-}
 module Paths_Pac_Man_game (
     version,
     getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir,
@@ -31,23 +31,23 @@ catchIO = Exception.catch
 version :: Version
 version = Version [0,1,0,0] []
 prefix, bindirrel :: FilePath
-prefix        = "C:\\Users\\Thomas\\AppData\\Roaming\\cabal"
+prefix        = "C:\\Users\\Lex\\AppData\\Roaming\\cabal"
 bindirrel     = "bin"
 
 getBinDir :: IO FilePath
 getBinDir = getPrefixDirRel bindirrel
 
 getLibDir :: IO FilePath
-getLibDir = getPrefixDirRel "x86_64-windows-ghc-8.2.1\\Pac-Man-game-0.1.0.0-Gh9W4AOWcv8DNIjfIk5iJv-Pac-Man-game"
+getLibDir = getPrefixDirRel "x86_64-windows-ghc-8.4.3\\Pac-Man-game-0.1.0.0-JSwscrD08TWDKPQJcv2s3A-Pac-Man-game"
 
 getDynLibDir :: IO FilePath
-getDynLibDir = getPrefixDirRel "x86_64-windows-ghc-8.2.1"
+getDynLibDir = getPrefixDirRel "x86_64-windows-ghc-8.4.3"
 
 getDataDir :: IO FilePath
-getDataDir =  catchIO (getEnv "Pac_Man_game_datadir") (\_ -> getPrefixDirRel "x86_64-windows-ghc-8.2.1\\Pac-Man-game-0.1.0.0")
+getDataDir =  catchIO (getEnv "Pac_Man_game_datadir") (\_ -> getPrefixDirRel "x86_64-windows-ghc-8.4.3\\Pac-Man-game-0.1.0.0")
 
 getLibexecDir :: IO FilePath
-getLibexecDir = getPrefixDirRel "Pac-Man-game-0.1.0.0-Gh9W4AOWcv8DNIjfIk5iJv-Pac-Man-game\\x86_64-windows-ghc-8.2.1\\Pac-Man-game-0.1.0.0"
+getLibexecDir = getPrefixDirRel "Pac-Man-game-0.1.0.0-JSwscrD08TWDKPQJcv2s3A-Pac-Man-game\\x86_64-windows-ghc-8.4.3\\Pac-Man-game-0.1.0.0"
 
 getSysconfDir :: IO FilePath
 getSysconfDir = getPrefixDirRel "etc"

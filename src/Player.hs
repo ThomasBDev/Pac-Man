@@ -8,8 +8,9 @@ lives = 3
 ghostCombo :: Int
 ghostCombo = 0
 
-score :: Int
-score = 0
+score, highscore :: Int
+score = 0 --reset to 0 if gameover
+highscore = 1000 --readfile "highscore.txt"
 
 eatPacDot :: Int -> Int
 eatPacDot s = s + 100

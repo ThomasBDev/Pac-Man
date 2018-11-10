@@ -32,6 +32,7 @@ row13Walls = [W, W, W, W, W, W, W, W, W, W, W, W, W]
 row6Walls = [W, W, W, W, W, W]
 row5Walls = [W, W, W, W, W]
 row4Walls = [W, W, W, W]
+row2Walls = [W, W]
 row9Corridors = [C, C, C, C, C, C, C, C, C]
 row7Corridors = [C, C, C, C, C, C, C]
 row3Corridors = [C, C, C]
@@ -42,13 +43,13 @@ row3Dots = [D, D, D]
 testLevel :: Level
 testLevel = [ row13Walls,
               [W, P] ++ row9Dots ++ [P, W],
-              [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
+              [W, C] ++ [W, C] ++ row2Walls ++ [C] ++ row2Walls ++ [C, W] ++ [C, W],
               [W, C, W] ++ row7Corridors ++ [W, C, W],
               [W] ++ row3Dots ++ [W, W, C, W, W] ++ row3Dots ++ [W],
               [T, C, W] ++ row3Corridors ++ [G] ++ row3Corridors ++ [W, C, T],
               [W] ++ row3Dots++ row5Walls ++ row3Dots ++ [W],
               [W, C, W] ++ row3Corridors ++ [S] ++ row3Corridors ++ [W, C, W],
-              [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
+              [W, C] ++ [W, C] ++ row2Walls ++ [C] ++ row2Walls ++ [C, W] ++ [C, W],
               [W, P] ++ row9Dots ++ [P, W],
               row13Walls ]
 
