@@ -6,6 +6,7 @@ import Graphics.Gloss
 import Model
 
 import Level
+import Player
 
 
 -- Ik weet niet precies waar maar pacMouth is een waarde die moet worden geupdate bij animatie
@@ -28,10 +29,10 @@ buildPacMan x y variable = translate x y pacManPicture
                                                             -- thickArc wordt tegen de klok in getekend.
 
 scoretext, highscoretext, begintext, titletext, pausetext, gameovertext :: Picture
-scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text "Score:")))
+scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text "Score: ")))
 highscoretext = translate (-300) (-270) (scale 0.2 0.2 (color red (text "High-Score:")))
 begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
-titletext = translate (-160) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
+titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = color red (text "Game over")
 -- thickCircle radius thickness
