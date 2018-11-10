@@ -6,8 +6,8 @@ import Level
 
 data TypeOfState = Title
                  | Playing
+                 | Paused
                  | GameOver
-                 | ShowAChar   Char
                  deriving Eq
 
 nO_SECS_BETWEEN_CYCLES :: Float
@@ -18,11 +18,6 @@ data GameState = GameState {
                  , currentLevel :: Level
                  , elapsedTime  :: Float
                  }
-                 
--- data GameState = Title
-               -- | Playing
-               -- | Paused
-               -- | GameOver
 
 initialState :: GameState
 initialState = GameState Title testLevel 0
