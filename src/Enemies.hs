@@ -1,7 +1,6 @@
 module Enemies where
 
 import Level
-import System.Random
 
 data Ghost = Blinky Strategy
            | Inky   Strategy

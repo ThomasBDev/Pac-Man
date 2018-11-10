@@ -8,6 +8,7 @@ data TypeOfState = Title
                  | Playing
                  | GameOver
                  | ShowAChar   Char
+                 deriving Eq
 
 nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 1

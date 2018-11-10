@@ -9,17 +9,23 @@ import Level
 
 
 -- Ik weet niet precies waar maar pacMouth is een waarde die moet worden geupdate bij animatie
-wall, teleporter, home, dot, powerDot, pacMan, beginScreen, ghost :: Picture
+wall, teleporter, home, dot, powerDot, beginScreen, ghost :: Picture
 wall        = color blue (rectangleSolid fieldWidth fieldWidth)
 teleporter  = color orange (thickCircle (fieldWidth / 4) 10)
 home        = color violet (arc 120 (-30) (fieldWidth / 2))
 dot         = color aquamarine (thickCircle (fieldWidth / 10) 2)
 powerDot    = color cyan (thickCircle (fieldWidth / 5) 5)
-pacMan      = color yellow (thickArc 40 (-(pacMouth)) (fieldWidth / 5) 20)
+pacMan      = color yellow (thickArc pacMouth (-pacMouth) (fieldWidth / 5) 20)
 ghost       = color red (rectangleSolid (fieldWidth / 2) (fieldWidth / 2))
                                           -- fromIntegral zet (o.a.) Int's om in Floats.
 beginScreen    = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 gameOverScreen = color white (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
+
+buildPacMan :: Float -> Float -> Float -> Picture
+buildPacMan x y 0        = translate x y pacMan
+buildPacMan x y variable = translate x y pacManPicture
+                         where pacManPicture = color yellow (thickArc (variable * 60) (-variable * 60) (fieldWidth / 5) 20)
+                                                            -- thickArc wordt tegen de klok in getekend.
 
 -- thickCircle radius thickness
 
@@ -30,27 +36,28 @@ buildTile x y T = translate x y teleporter
 buildTile x y H = translate x y home
 buildTile x y D = translate x y dot
 buildTile x y P = translate x y powerDot
-buildTile x y S = translate x y pacMan
+-- buildTile x y S = translate x y pacMan
 buildTile x y G = translate x y ghost
 buildTile _ _ _ = blank
 
-buildRow :: Float -> Float -> Row -> [Picture]
-buildRow _ _ []             = []
-buildRow x y (field:fields) = buildTile x y field : buildRow (x + fieldWidth) y fields
+buildRow :: Float -> Float -> Float -> Row -> [Picture]
+buildRow _ _ _ []                    = []
+buildRow x y variable (S:fields)     = buildPacMan x y variable : buildRow (x + fieldWidth) y variable fields
+buildRow x y variable (field:fields) = buildTile x y field      : buildRow (x + fieldWidth) y variable fields
 
-buildLevel :: Float -> Float -> Level -> [[Picture]]
-buildLevel _ _ []         = []
-buildLevel x y (row:rows) = buildRow x y row : buildLevel x (y - fieldWidth) rows
+buildLevel :: Float -> Float -> Float -> Level -> [[Picture]]
+buildLevel _ _ _ []                = []
+buildLevel x y variable (row:rows) = buildRow x y variable row : buildLevel x (y - fieldWidth) variable rows
 
-constructedRow :: Picture
-constructedRow = pictures (buildRow offsetX offsetY row13Walls)
-               where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
-                     offsetY = (windowHeight / 2) - (fieldWidth / 2)
+-- constructedRow :: Picture
+-- constructedRow = pictures (buildRow offsetX offsetY row13Walls)
+               -- where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
+                     -- offsetY = (windowHeight / 2) - (fieldWidth / 2)
 
-constructedLevel :: Level -> Picture
-constructedLevel level = pictures (map pictures (buildLevel offsetX offsetY level))
-                       where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
-                             offsetY = (windowHeight / 2) - (fieldWidth / 2)
+constructedLevel :: GameState -> Picture
+constructedLevel currentGameState = pictures (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState)))
+                                  where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
+                                        offsetY = (windowHeight / 2) - (fieldWidth / 2)
  
 {- 
 variableLevel :: Picture
@@ -87,7 +94,7 @@ draw = return . viewPure
 viewPure :: GameState -> Picture
 viewPure gstate = case typeOfState gstate of
   Title         -> beginScreen
-  Playing       -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
+  Playing       -> constructedLevel gstate  --variableLevel + translated pacMan = huidige levelstate?
   GameOver      -> gameOverScreen
 -- color :: Color -> Picture -> Picture
 

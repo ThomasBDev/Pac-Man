@@ -15,6 +15,7 @@ import System.Random
 -- | Handle one iteration of the game
 update :: Float -> GameState -> IO GameState
 update secs gstate
+  | typeOfState gstate == Title = return gstate
   | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
   = -- We show a new random number
     -- Dit update het level als een bepaalde tijd voorbij is gegaan.
@@ -31,16 +32,17 @@ input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState
-
---Is dit waar de pacman animatie moet worden toegepast? Met een do methode?
--- Poging om Pac-Man te bewegen met de pijltjestoetsen.
-inputKey (EventKey (SpecialKey KeyUp) Down _ _)    gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) North }
-inputKey (EventKey (SpecialKey KeyRight) Down _ _) gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) East }
-inputKey (EventKey (SpecialKey KeyDown) Down _ _)  gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) South }
-inputKey (EventKey (SpecialKey KeyLeft) Down _ _)  gstate = gstate { currentLevel = updatedLevel (currentLevel gstate) West }
-    
+inputKey (EventKey (SpecialKey KeySpace) Down _ _) gstate | typeOfState gstate == Title = gstate { typeOfState = Playing }
+                                                          | otherwise                   = gstate 
+inputKey (EventKey (SpecialKey keyType) Down _ _) gstate | typeOfState gstate == Playing = newGameState gstate keyType
+                                                         | otherwise                     = gstate   
 inputKey _ gstate = gstate -- Otherwise keep the same
 
+newGameState :: GameState -> SpecialKey -> GameState
+newGameState gstate KeyUp    = gstate { currentLevel = updatedLevel (currentLevel gstate) North }
+newGameState gstate KeyRight = gstate { currentLevel = updatedLevel (currentLevel gstate) East }
+newGameState gstate KeyDown  = gstate { currentLevel = updatedLevel (currentLevel gstate) South }
+newGameState gstate KeyLeft  = gstate { currentLevel = updatedLevel (currentLevel gstate) West }
 
 
 
