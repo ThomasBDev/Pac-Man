@@ -10,7 +10,7 @@ ghostCombo = 0
 
 score, highscore :: Int
 score = 0 --reset to 0 if gameover
-highscore = loadscore --readfile "highscore.txt"
+highscore = 1000 --readfile "highscore.txt"
 
 readNumberFromFile :: FilePath -> IO Int
 readNumberFromFile path = do
