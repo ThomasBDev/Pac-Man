@@ -49,7 +49,7 @@ testLevel = [ row13Walls,
               [T, C, W] ++ row3Corridors ++ [G] ++ row3Corridors ++ [W, C, T],
               [W] ++ row3Dots++ row5Walls ++ row3Dots ++ [W],
               [W, C, W] ++ row3Corridors ++ [S] ++ row3Corridors ++ [W, C, W],
-              [W, C] ++ [W, C] ++ row2Walls ++ [C] ++ row2Walls ++ [C, W] ++ [C, W],
+              [W, C] ++ [W, C] ++ row2Walls ++ [D] ++ row2Walls ++ [C, W] ++ [C, W],
               [W, P] ++ row9Dots ++ [P, W],
               row13Walls ]
 
@@ -110,6 +110,16 @@ checkTeleporter lvl y d | d == North = (singleList !! (y - levelWidth)) == T
                         | d == West  = (singleList !! (y - 1))          == T
                         where singleList = concat lvl
 checkTeleporter _ _ _   = False
+
+checkDot :: Level -> Int -> Direction -> Bool
+checkDot lvl y d | d == North = (singleList !! (y - levelWidth)) ==  D
+                 | d == East  = (singleList !! (y + 1))          ==  D
+                 | d == South = (singleList !! (y + levelWidth)) ==  D
+                 | d == West  = (singleList !! (y - 1))          ==  D
+                 where singleList = concat lvl
+checkDot _ _ _   = False
+
+
 
 selectCreature :: Level -> Field -> Maybe Int
 selectCreature level field = elemIndex field (concat level)

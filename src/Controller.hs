@@ -29,7 +29,7 @@ update secs gstate
           -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
           if (selectCreature (currentLevel gstate) S) == Nothing
           then return $ gstate { typeOfState = GameOver }
-          else return $ GameState Playing updatedGhost 0
+          else return $ GameState Playing updatedGhost 0 (currentScore gstate)
   -- We zitten in de PlayingState, maar de cyclus is nog bezig.
   | otherwise
   = -- Just update the elapsed time
@@ -50,12 +50,19 @@ inputKey (EventKey key Down _ _) gstate | typeOfState gstate == Title && key == 
 inputKey _ gstate = gstate -- Otherwise keep the same
 
 newGameState :: GameState -> Key -> GameState
-newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North }
-newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East }
-newGameState gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South }
-newGameState gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West }
+newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South, currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) South) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West,  currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) West) (currentScore gstate) }
 newGameState gstate (Char 'p')            = gstate { typeOfState = Paused }
 newGameState gstate _                     = gstate
+
+pacManIndex :: Level -> Int
+pacManIndex currentLevel = removeMaybe (selectCreature currentLevel S)
+
+removeMaybe :: Maybe Int -> Int
+removeMaybe Nothing  = -1
+removeMaybe (Just x) = x
 
 
 

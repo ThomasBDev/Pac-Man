@@ -22,6 +22,15 @@ updatedLevelGhost :: Level -> Int -> Level
 updatedLevelGhost level randomIndex = updateGhost level ghostIndex (nextDirection level Chase ghostIndex randomIndex)
                                     where ghostIndex = selectCreature level G
                           
+updateGhost :: Level -> Maybe Int -> Direction -> Level
+updateGhost lvl Nothing _    = [[]]
+updateGhost lvl (Just pos) d | checkWall lvl pos d = lvl
+                             | otherwise           = singleToLevel (moveCreature singleList pos G d)
+                             where singleList       = concat lvl
+                                   singleToLevel xs = splitEvery levelWidth xs
+
+
+                          
 nextDirection :: Level -> Strategy -> Maybe Int -> Int -> Direction
 nextDirection level Chase ghostIndex randomIndex = shortestWay pacManPosition ghostPosition randomIndex
                                                  where pacManIndex    = selectCreature level S
@@ -49,12 +58,3 @@ selectDirection 0 pac ghost | pac > ghost = South
                             | pac < ghost = North
 selectDirection 1 pac ghost | pac > ghost = East
                             | pac < ghost = West
-                                                
-                                                
-  
-updateGhost :: Level -> Maybe Int -> Direction -> Level
-updateGhost lvl Nothing _    = [[]]
-updateGhost lvl (Just pos) d | checkWall lvl pos d = lvl
-                             | otherwise           = singleToLevel (moveCreature singleList pos G d)
-                             where singleList       = concat lvl
-                                   singleToLevel xs = splitEvery levelWidth xs

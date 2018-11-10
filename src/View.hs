@@ -27,8 +27,12 @@ gameOverScreen = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWi
 constructBeginScreen :: Picture
 constructBeginScreen = pictures [titleScreen, pacMan, titletext, begintext, highscoretext]
 
-scoretext, highscoretext, begintext, titletext, pausetext, gameovertext, returntext :: Picture
-scoretext = translate 0 (-270) (scale 0.2 0.2 (color red (text ("Score: " ++ show score))))
+
+
+scoretext :: Int -> Picture
+scoretext score = translate 0 (-270) (scale 0.2 0.2 (color red (text ("Score: " ++ show score))))
+              
+highscoretext, begintext, titletext, pausetext, gameovertext, returntext :: Picture
 highscoretext | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show highscore))))
               | otherwise         = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show score))))
 begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
@@ -38,9 +42,10 @@ gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
 returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
 
 constructPausedScreen :: GameState -> Picture
-constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen]
-                  
+constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen]                  
 constructGameoverScreen = pictures [gameOverScreen, gameovertext, returntext]
+
+
 
 buildTile :: Float -> Float -> Field -> Picture
 buildTile x y W = translate x y wall
@@ -69,7 +74,7 @@ buildLevel _ _ _ []                = []
 buildLevel x y variable (row:rows) = buildRow x y variable row : buildLevel x (y - fieldWidth) variable rows
 
 constructLevel :: GameState -> Picture
-constructLevel currentGameState = pictures (scoretext : highscoretext: (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
+constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : highscoretext : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
                                   where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                                         offsetY = (windowHeight / 2) - (fieldWidth / 2)
  

@@ -17,7 +17,8 @@ data GameState = GameState {
                    typeOfState  :: TypeOfState
                  , currentLevel :: Level
                  , elapsedTime  :: Float
+                 , currentScore :: Int
                  }
 
 initialState :: GameState
-initialState = GameState Title testLevel 0
+initialState = GameState Title testLevel 0 0
