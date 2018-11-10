@@ -65,7 +65,6 @@ removeMaybe Nothing  = -1
 removeMaybe (Just x) = x
 
 
-
 data Creature = Player Bool Position
               | Ghost Bool Bool Position
            
