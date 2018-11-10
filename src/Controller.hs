@@ -18,13 +18,19 @@ update secs gstate
   | typeOfState gstate == Title    = return gstate
   | typeOfState gstate == Paused   = return gstate
   | typeOfState gstate == GameOver = return gstate
+  
+  -- We zitten in de PlayingState en 1 cyclus is voorbij.
   | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
   = -- We show a new random number
     -- Dit update het level als een bepaalde tijd voorbij is gegaan.
     -- De Ghosts bewegen altijd, dus hun posities moeten hier worden aangepast?       
        do randomIndex <- randomRIO (0, 1)
           let updatedGhost = updatedLevelGhost (currentLevel gstate) randomIndex
-          return $ GameState Playing updatedGhost 0
+          -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
+          if (selectCreature (currentLevel gstate) S) == Nothing
+          then return $ gstate { typeOfState = GameOver }
+          else return $ GameState Playing updatedGhost 0
+  -- We zitten in de PlayingState, maar de cyclus is nog bezig.
   | otherwise
   = -- Just update the elapsed time
     return $ gstate { elapsedTime = elapsedTime gstate + secs }
