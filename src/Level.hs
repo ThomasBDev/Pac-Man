@@ -1,7 +1,6 @@
 module Level where
 
 import Data.List
-import System.Random
 
 -- putStrLn neemt een String en tekent de uitkomst in de console.
 printLevel :: Level -> IO ()
@@ -46,7 +45,7 @@ testLevel = [ row13Walls,
               [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],
               [W, C, W] ++ row7Corridors ++ [W, C, W],
               [W] ++ row3Dots ++ [W, W, C, W, W] ++ row3Dots ++ [W],
-              [T, C, W, C, W, H, G, H, W, C, W, C, T],
+              [T, C, W] ++ row3Corridors ++ [G] ++ row3Corridors ++ [W, C, T],
               [W] ++ row3Dots++ row5Walls ++ row3Dots ++ [W],
               [W, C, W] ++ row3Corridors ++ [S] ++ row3Corridors ++ [W, C, W],
               [W, C] ++ row4Walls ++ [C] ++ row4Walls ++ [C, W],

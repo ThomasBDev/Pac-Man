@@ -18,7 +18,8 @@ powerDot    = color cyan (thickCircle (fieldWidth / 5) 5)
 pacMan      = color yellow (thickArc 40 (-(pacMouth)) (fieldWidth / 5) 20)
 ghost       = color red (rectangleSolid (fieldWidth / 2) (fieldWidth / 2))
                                           -- fromIntegral zet (o.a.) Int's om in Floats.
-beginScreen = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
+beginScreen    = color green (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
+gameOverScreen = color white (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 
 -- thickCircle radius thickness
 
@@ -87,6 +88,7 @@ viewPure :: GameState -> Picture
 viewPure gstate = case typeOfState gstate of
   Title         -> beginScreen
   Playing       -> constructedLevel (currentLevel gstate)  --variableLevel + translated pacMan = huidige levelstate?
+  GameOver      -> gameOverScreen
 -- color :: Color -> Picture -> Picture
 
 -- text :: String -> Picture

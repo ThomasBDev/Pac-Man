@@ -6,6 +6,7 @@ import Level
 
 data TypeOfState = Title
                  | Playing
+                 | GameOver
                  | ShowAChar   Char
 
 nO_SECS_BETWEEN_CYCLES :: Float

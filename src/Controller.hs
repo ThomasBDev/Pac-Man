@@ -18,9 +18,10 @@ update secs gstate
   | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
   = -- We show a new random number
     -- Dit update het level als een bepaalde tijd voorbij is gegaan.
-    -- De Ghosts bewegen altijd, dus hun posities moeten hier worden aangepast?
-       let updatedGhost = updatedLevelGhost (currentLevel gstate)
-       in return $ GameState Playing updatedGhost 0
+    -- De Ghosts bewegen altijd, dus hun posities moeten hier worden aangepast?       
+       do randomIndex <- randomRIO (0, 1)
+          let updatedGhost = updatedLevelGhost (currentLevel gstate) randomIndex
+          return $ GameState Playing updatedGhost 0
   | otherwise
   = -- Just update the elapsed time
     return $ gstate { elapsedTime = elapsedTime gstate + secs }
