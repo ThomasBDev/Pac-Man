@@ -22,7 +22,7 @@ ghost       = color red (rectangleSolid (fieldWidth / 2) (fieldWidth / 2))
                                           
 titleScreen    = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
 pausedScreen   = color magenta (translate ((-windowWidth / 2) + 80) 0 (text "PAUSED"))
-gameOverScreen = color white (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
+gameOverScreen = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
                              
 constructBeginScreen :: Picture
 constructBeginScreen = pictures [titleScreen, pacMan, titletext, begintext, highscoretext]
@@ -34,8 +34,8 @@ highscoretext | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (colo
 begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
-gameovertext = color red (text "Game over")
-returntext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
+gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
+returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
 
 constructPausedScreen :: GameState -> Picture
 constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen]
