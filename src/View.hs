@@ -36,14 +36,14 @@ highscoretext gstate | highscore > score = translate (-300) (-270) (scale 0.2 0.
                      where highscore = currentHighScore gstate
                            score     = currentScore gstate
               
-begintext, randomtext, titletext, pausetext, gameovertext, returntext :: Picture
+begintext, randomtext, titletext, pausetext, gameovertext, returntext, optionstext :: Picture
 begintext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "LEVEL SELECT: Press 1, 2, 3 or 4!")))
 randomtext = translate (-270) (-190) (scale 0.2 0.2 (color red (text "RANDOM SELECT: Press R!")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
 returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
-
+optionstext = translate (-300) (-300) (scale 0.2 0.2 (color red (text "PAUSE: Press P!    QUIT: Press Q!")))
 
 
 constructBeginScreen, constructPausedScreen :: GameState -> Picture
@@ -84,7 +84,7 @@ buildLevel _ _ _ []                = []
 buildLevel x y variable (row:rows) = buildRow x y variable row : buildLevel x (y - fieldWidth) variable rows
 
 constructLevel :: GameState -> Picture
-constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : (highscoretext currentGameState) : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
+constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : (highscoretext currentGameState) : optionstext : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
                                   where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                                         offsetY = (windowHeight / 2) - (fieldWidth / 2)
  
