@@ -40,8 +40,6 @@ row9Dots = [D, D, D, D, D, D, D, D, D]
 row7Dots = [D, D, D, D, D, D, D]
 row3Dots = [D, D, D]
 
-
-
 data Direction = North
                | East
                | South
@@ -86,8 +84,6 @@ convertCharToField 'T' = T
 convertCharToField 'S' = S
 convertCharToField 'G' = G
     
-    
-    
 data Position = Pos Int Int
 
 instance Show Position where
@@ -98,8 +94,6 @@ currentPacManPosition (Just index) = Pos x y
                                    where x = index `mod` levelWidth
                                          y = index `div` levelWidth                      
 
-
-
 checkField :: Level -> Field -> Int -> Direction -> Bool
 checkField level field pos dir | dir == North = singleList !! (pos - levelWidth) ==  field
                                | dir == East  = singleList !! (pos + 1)          ==  field
@@ -108,8 +102,6 @@ checkField level field pos dir | dir == North = singleList !! (pos - levelWidth)
                                where singleList = concat level
 checkField _ _ _ _             = False
                                          
-
-
 selectCreature :: Level -> Field -> Maybe Int
 selectCreature level field = elemIndex field (concat level)
 
@@ -119,8 +111,6 @@ moveCreature currentLevel creatureIndex field North = replaceAtN2 (creatureIndex
 moveCreature currentLevel creatureIndex field East  = replaceAtN1 (creatureIndex + 1)          creatureIndex field currentLevel
 moveCreature currentLevel creatureIndex field South = replaceAtN1 (creatureIndex + levelWidth) creatureIndex field currentLevel
 moveCreature currentLevel creatureIndex field West  = replaceAtN2 (creatureIndex - 1)          creatureIndex field currentLevel
-
-
 
 splitEvery :: Int -> [a] -> [[a]]
 splitEvery _ [] = []
@@ -142,8 +132,6 @@ replaceAtN2 newIndex oldIndex newField (x:xs) | newIndex == 0 = newField : repla
                                               | oldIndex == 0 = C : xs
                                               | otherwise     = x : replaceAtN2 (newIndex - 1) (oldIndex - 1) newField xs
                
-               
- 
 data Item = PacDot
           | Fruit
           

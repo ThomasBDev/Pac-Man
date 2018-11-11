@@ -46,8 +46,6 @@ update secs gstate
 allDots :: Level -> Maybe Int
 allDots []    = Nothing
 allDots level = selectCreature level D
-
-    
     
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
@@ -90,13 +88,9 @@ removeMaybe :: Maybe Int -> Int
 removeMaybe Nothing  = -1
 removeMaybe (Just x) = x
 
-
-
 data Creature = Player Bool Position
               | Ghost Bool Bool Position
-           
-
-
+              
 replaceAtN :: Int -> a -> [a] -> [a]
 replaceAtN _ _ []     = []
 replaceAtN n y (x:xs) | n == 0    = y : xs

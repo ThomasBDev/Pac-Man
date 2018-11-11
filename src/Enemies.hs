@@ -16,8 +16,6 @@ data Strategy = Chase
               | Wait
               | Leave
               
-
-              
 updatedLevelGhost :: Level -> Int -> Level
 updatedLevelGhost level randomIndex = updateGhost level ghostIndex (nextDirection level Chase ghostIndex randomIndex)
                                     where ghostIndex = selectCreature level G
@@ -28,8 +26,6 @@ updateGhost lvl (Just pos) d | checkField lvl W pos d = lvl
                              | otherwise              = singleToLevel (moveCreature singleList pos G d)
                              where singleList       = concat lvl
                                    singleToLevel xs = splitEvery levelWidth xs
-
-
                           
 nextDirection :: Level -> Strategy -> Maybe Int -> Int -> Direction
 nextDirection level Chase ghostIndex randomIndex = shortestWay pacManPosition ghostPosition randomIndex

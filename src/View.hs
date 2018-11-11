@@ -9,7 +9,7 @@ import Level
 import Player
 
 
--- Ik weet niet precies waar maar pacMouth is een waarde die moet worden geupdate bij animatie
+-- several visual values are declared here
 wall, teleporter, home, dot, powerDot, pacMan, ghost, titleScreen, pausedScreen, gameOverScreen :: Picture
 wall        = color blue (rectangleSolid fieldWidth fieldWidth)
 teleporter  = color orange (thickCircle (fieldWidth / 4) 10)
@@ -24,12 +24,10 @@ titleScreen    = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWi
 pausedScreen   = color magenta (translate ((-windowWidth / 2) + 80) 0 (text "PAUSED"))
 gameOverScreen = color blue (rectangleSolid ((fromIntegral levelWidth) * fieldWidth) ((fromIntegral levelHeight) * fieldWidth))
                              
-
-
-
 scoretext :: Int -> Picture
 scoretext score = translate 0 (-270) (scale 0.2 0.2 (color red (text ("Score: " ++ show score))))
 
+-- properly displays highscore
 highscoretext :: GameState -> Picture
 highscoretext gstate | highscore > score = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show highscore))))
                      | otherwise         = translate (-300) (-270) (scale 0.2 0.2 (color red (text ("High-Score: " ++ show score))))
@@ -45,15 +43,12 @@ gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
 returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to go return to title")))
 optionstext = translate (-300) (-300) (scale 0.2 0.2 (color red (text "PAUSE: Press P!    QUIT: Press Q!")))
 
-
 constructBeginScreen, constructPausedScreen :: GameState -> Picture
 constructBeginScreen gstate  = pictures [titleScreen, pacMan, titletext, begintext, randomtext, (highscoretext gstate)]
 constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen] 
 
 constructGameOverScreen :: Picture
 constructGameOverScreen = pictures [gameOverScreen, gameovertext, returntext]
-
-
 
 buildTile :: Float -> Float -> Field -> Picture
 buildTile x y W = translate x y wall
@@ -87,8 +82,6 @@ constructLevel :: GameState -> Picture
 constructLevel currentGameState = pictures ((scoretext (currentScore currentGameState)) : (highscoretext currentGameState) : optionstext : (map pictures (buildLevel offsetX offsetY (elapsedTime currentGameState) (currentLevel currentGameState))))
                                   where offsetX = (-windowWidth / 2) + (fieldWidth / 2)
                                         offsetY = (windowHeight / 2) - (fieldWidth / 2)
- 
-
 
 -- pacMan :: Picture
 -- pacMan = color yellow (circleSolid 100)
@@ -101,8 +94,6 @@ constructLevel currentGameState = pictures ((scoretext (currentScore currentGame
 
 --           width  height ByteString
 -- bitmap :: Int -> Int -> BitmapData -> Bool -> Picture
-
-
 
 draw :: GameState -> IO Picture
 draw = return . viewPure
