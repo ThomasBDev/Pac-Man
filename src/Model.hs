@@ -15,7 +15,8 @@ nO_SECS_BETWEEN_CYCLES = 1
 
 data GameState = GameState {
                    typeOfState       :: TypeOfState
-                 , initialLevels     :: [Level]
+                 , allLevels         :: [Level]
+                 , initialLevel      :: Level
                  , currentLevel      :: Level
                  , elapsedTime       :: Float
                  , randomLevelIndex  :: Int
@@ -24,4 +25,4 @@ data GameState = GameState {
                  }
 
 initialState :: GameState
-initialState = GameState Title [] [] 0 0 0 0
+initialState = GameState Title [] [] [] 0 0 0 0
