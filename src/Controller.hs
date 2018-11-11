@@ -17,9 +17,9 @@ import Data.Char
 -- | Handle one iteration of the game
 update :: Float -> GameState -> IO GameState
 update secs gstate
-  | typeOfState gstate == Title    = do highscore <- loadScore                                        
+  | typeOfState gstate == Title    = do highscore    <- loadScore                                        
                                         levelStrings <- sequence loadLevels
-                                        randomLevel <- randomRIO (0, ((length levelStrings) - 1))
+                                        randomLevel  <- randomRIO (0, ((length levelStrings) - 1))
                                         return $ gstate { currentHighScore = highscore, allLevels = convertStringsToLevels levelStrings, randomLevelIndex = randomLevel }
   | typeOfState gstate == Paused   = return gstate
   | typeOfState gstate == GameOver = return gstate
@@ -47,13 +47,15 @@ allDots :: Level -> Maybe Int
 allDots []    = Nothing
 allDots level = selectCreature level D
     
+    
+    
 -- | Handle user input
 input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState                                                         
 inputKey (EventKey key Down _ _) gstate | typeOfState gstate == Title                                  = selectLevel gstate key
-                                        | typeOfState gstate == Playing                                = newGameState gstate key
+                                        | typeOfState gstate == Playing                                = handleInputPlaying gstate key
                                         | typeOfState gstate == Paused && key == Char 'p'              = gstate { typeOfState = Playing }
                                         | typeOfState gstate == GameOver && key == SpecialKey KeySpace = initialState
                                         | otherwise                                                    = gstate
@@ -72,14 +74,14 @@ selectLevel gstate (Char c) | (allLevels gstate == [])                          
                                                                                     where chosenLevel = allLevels gstate !! (ord c - 49)
 selectLevel gstate _                                                                = gstate
                             
-newGameState :: GameState -> Key -> GameState
-newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) South) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) West) (currentScore gstate) }
-newGameState gstate (Char 'p')            = gstate { typeOfState = Paused }
-newGameState gstate (Char 'q')            = initialState
-newGameState gstate _                     = gstate
+handleInputPlaying :: GameState -> Key -> GameState
+handleInputPlaying gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
+handleInputPlaying gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
+handleInputPlaying gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) South) (currentScore gstate) }
+handleInputPlaying gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) West) (currentScore gstate) }
+handleInputPlaying gstate (Char 'p')            = gstate { typeOfState = Paused }
+handleInputPlaying gstate (Char 'q')            = initialState
+handleInputPlaying gstate _                     = gstate
 
 pacManIndex :: Level -> Int
 pacManIndex currentLevel = removeMaybe (selectCreature currentLevel S)

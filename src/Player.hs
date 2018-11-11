@@ -8,9 +8,8 @@ lives = 3
 ghostCombo :: Int
 ghostCombo = 0
 
-score, highscore :: Int
-score = 0
-highscore = 0
+pacMouth :: Float
+pacMouth = 40
 
 readNumberFromFile :: FilePath -> IO Int
 readNumberFromFile path = do
@@ -23,18 +22,18 @@ loadScore = readNumberFromFile "highscore.txt"
 saveScore :: Int -> IO ()
 saveScore score = writeFile "highscore.txt" (show score)
 
+-- Add points to the player's score when he eats a dot.
+-- Otherwise, keep the score the same.
 updatedScore :: Bool -> Int -> Int
 updatedScore False score = score
 updatedScore True score = score + 100
 
-eatPacDot :: Int -> Int
-eatPacDot s = s + 100
-
+-- Update a level based on the player's actions.
 updatedLevel :: Level -> Direction -> Level
 updatedLevel level dir = updatePacMan level pacManIndex dir
                        where pacManIndex = selectCreature level S
                        
--- Update de level array met de nieuwe positie van pac man
+-- Update Pac-Man's position in a Level.
 updatePacMan :: Level -> Maybe Int -> Direction -> Level
 updatePacMan lvl Nothing _    = [[]]
 updatePacMan lvl (Just pos) d | checkField lvl W pos d = lvl
@@ -44,9 +43,6 @@ updatePacMan lvl (Just pos) d | checkField lvl W pos d = lvl
                                     singleToLevel xs = splitEvery levelWidth xs
                                     
 teleportPacMan :: Row -> Int -> Direction -> Row
--- updatePacMan past de positie aan, dus dit gebeurt voordat Pac-Man op de teleporter komt.
--- Als de je naar een teleporter in het Noorden beweegt, dan ligt de nieuwe pacManIndex later in de array dan de oude.
--- North hier --> Gebruik South berekening.
 teleportPacMan currentLevel pacManIndex North = replaceAtN1 (pacManIndex + (levelWidth * (levelHeight - 3))) pacManIndex S currentLevel
 teleportPacMan currentLevel pacManIndex East  = replaceAtN2 (pacManIndex - (levelHeight - 1))                pacManIndex S currentLevel
 teleportPacMan currentLevel pacManIndex South = replaceAtN2 (pacManIndex - (levelWidth * (levelHeight - 3))) pacManIndex S currentLevel

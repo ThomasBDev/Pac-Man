@@ -9,29 +9,13 @@ import Level
 import Graphics.Gloss.Interface.IO.Game
 
 main :: IO()
-
--- main = printLevel testLevel
-
-main = playIO displayWindow -- Or FullScreen
+main = playIO displayWindow    -- Window or FullScreen
               black            -- Background color
               10               -- Frames per second
-              initialState    -- Initial state
+              initialState     -- Initial state
               draw             -- View function
               input            -- Event function
-              update             -- Step function
+              update           -- Step function
               
 displayWindow :: Display
 displayWindow = InWindow "Pac Man" (round windowWidth, round windowHeight) (100, 100)
-
--- step functie wordt elke frame aangeroepen.
-
-{-
-playIO :: Display ->
-          Color ->
-          Int ->
-          world ->
-          (world -> IO Picture) ->
-          (Event -> world -> IO world) -> 
-          (Float -> world -> IO world) ->
-          IO ()
--}
