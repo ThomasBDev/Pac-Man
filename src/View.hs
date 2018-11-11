@@ -36,8 +36,9 @@ highscoretext gstate | highscore > score = translate (-300) (-270) (scale 0.2 0.
                      where highscore = currentHighScore gstate
                            score     = currentScore gstate
               
-begintext, titletext, pausetext, gameovertext, returntext :: Picture
-begintext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "LEVEL SELECT: Press 1, 2, 3 or 4")))
+begintext, randomtext, titletext, pausetext, gameovertext, returntext :: Picture
+begintext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "LEVEL SELECT: Press 1, 2, 3 or 4!")))
+randomtext = translate (-270) (-190) (scale 0.2 0.2 (color red (text "RANDOM SELECT: Press R!")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
@@ -46,7 +47,7 @@ returntext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "Press SPAC
 
 
 constructBeginScreen, constructPausedScreen :: GameState -> Picture
-constructBeginScreen gstate  = pictures [titleScreen, pacMan, titletext, begintext, (highscoretext gstate)]
+constructBeginScreen gstate  = pictures [titleScreen, pacMan, titletext, begintext, randomtext, (highscoretext gstate)]
 constructPausedScreen gstate = pictures [(constructLevel gstate), pausedScreen] 
 
 constructGameOverScreen :: Picture
