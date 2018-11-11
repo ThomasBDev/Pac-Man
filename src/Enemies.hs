@@ -24,8 +24,8 @@ updatedLevelGhost level randomIndex = updateGhost level ghostIndex (nextDirectio
                           
 updateGhost :: Level -> Maybe Int -> Direction -> Level
 updateGhost lvl Nothing _    = [[]]
-updateGhost lvl (Just pos) d | checkWall lvl pos d = lvl
-                             | otherwise           = singleToLevel (moveCreature singleList pos G d)
+updateGhost lvl (Just pos) d | checkField lvl W pos d = lvl
+                             | otherwise              = singleToLevel (moveCreature singleList pos G d)
                              where singleList       = concat lvl
                                    singleToLevel xs = splitEvery levelWidth xs
 

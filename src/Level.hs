@@ -100,31 +100,14 @@ currentPacManPosition (Just index) = Pos x y
 
 
 
--- 13 is hier hardcoded de breedte van de pac maze want die kon ik niet vinden
-checkWall :: Level -> Int -> Direction -> Bool
-checkWall lvl y d | d == North = (singleList !! (y - levelWidth)) ==  W
-                  | d == East  = (singleList !! (y + 1))          ==  W
-                  | d == South = (singleList !! (y + levelWidth)) ==  W
-                  | d == West  = (singleList !! (y - 1))          ==  W
-                  where singleList = concat lvl
-checkWall _ _ _   = False
-
-checkTeleporter :: Level -> Int -> Direction -> Bool
-checkTeleporter lvl y d | d == North = (singleList !! (y - levelWidth)) == T
-                        | d == East  = (singleList !! (y + 1))          == T
-                        | d == South = (singleList !! (y + levelWidth)) == T
-                        | d == West  = (singleList !! (y - 1))          == T
-                        where singleList = concat lvl
-checkTeleporter _ _ _   = False
-
-checkDot :: Level -> Int -> Direction -> Bool
-checkDot lvl y d | d == North = (singleList !! (y - levelWidth)) ==  D
-                 | d == East  = (singleList !! (y + 1))          ==  D
-                 | d == South = (singleList !! (y + levelWidth)) ==  D
-                 | d == West  = (singleList !! (y - 1))          ==  D
-                 where singleList = concat lvl
-checkDot _ _ _   = False
-
+checkField :: Level -> Field -> Int -> Direction -> Bool
+checkField level field pos dir | dir == North = singleList !! (pos - levelWidth) ==  field
+                               | dir == East  = singleList !! (pos + 1)          ==  field
+                               | dir == South = singleList !! (pos + levelWidth) ==  field
+                               | dir == West  = singleList !! (pos - 1)          ==  field
+                               where singleList = concat level
+checkField _ _ _ _             = False
+                                         
 
 
 selectCreature :: Level -> Field -> Maybe Int

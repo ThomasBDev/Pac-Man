@@ -39,9 +39,9 @@ updatedLevel level dir = updatePacMan level pacManIndex dir
 -- Update de level array met de nieuwe positie van pac man
 updatePacMan :: Level -> Maybe Int -> Direction -> Level
 updatePacMan lvl Nothing _    = [[]]
-updatePacMan lvl (Just pos) d | checkWall lvl pos d       = lvl
-                              | checkTeleporter lvl pos d = singleToLevel (teleportPacMan singleList pos d)
-                              | otherwise                 = singleToLevel (moveCreature singleList pos S d)
+updatePacMan lvl (Just pos) d | checkField lvl W pos d = lvl
+                              | checkField lvl T pos d = singleToLevel (teleportPacMan singleList pos d)
+                              | otherwise              = singleToLevel (moveCreature singleList pos S d)
                               where singleList       = concat lvl
                                     singleToLevel xs = splitEvery levelWidth xs
                                     

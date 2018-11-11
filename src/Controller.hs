@@ -75,10 +75,10 @@ selectLevel gstate (Char c) | (allLevels gstate == [])                          
 selectLevel gstate _                                                                = gstate
                             
 newGameState :: GameState -> Key -> GameState
-newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South, currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) South) (currentScore gstate) }
-newGameState gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West,  currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) West) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyDown)  = gstate { currentLevel = updatedLevel (currentLevel gstate) South, currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) South) (currentScore gstate) }
+newGameState gstate (SpecialKey KeyLeft)  = gstate { currentLevel = updatedLevel (currentLevel gstate) West,  currentScore = updatedScore (checkField (currentLevel gstate) D (pacManIndex (currentLevel gstate)) West) (currentScore gstate) }
 newGameState gstate (Char 'p')            = gstate { typeOfState = Paused }
 newGameState gstate (Char 'q')            = initialState
 newGameState gstate _                     = gstate
