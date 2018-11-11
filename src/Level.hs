@@ -21,8 +21,8 @@ windowWidth  = 650
 windowHeight = 650
 
 levelWidth, levelHeight :: Int
-levelWidth  = length (testLevel !! 0)
-levelHeight = length testLevel
+levelWidth  = 13
+levelHeight = 11
 
 type Level = [Row]
 type Row   = [Field]
@@ -39,19 +39,8 @@ row3Corridors = [C, C, C]
 row9Dots = [D, D, D, D, D, D, D, D, D]
 row7Dots = [D, D, D, D, D, D, D]
 row3Dots = [D, D, D]
-           
-testLevel :: Level
-testLevel = [ row13Walls,
-              [W, P] ++ row9Dots ++ [P, W],
-              [W, C] ++ [W, C] ++ row2Walls ++ [C] ++ row2Walls ++ [C, W] ++ [C, W],
-              [W, C, W] ++ row7Corridors ++ [W, C, W],
-              [W] ++ row3Dots ++ [W, W, C, W, W] ++ row3Dots ++ [W],
-              [T, C, W] ++ row3Corridors ++ [G] ++ row3Corridors ++ [W, C, T],
-              [W] ++ row3Dots++ row5Walls ++ row3Dots ++ [W],
-              [W, C, W] ++ row3Corridors ++ [S] ++ row3Corridors ++ [W, C, W],
-              [W, C] ++ [W, C] ++ row2Walls ++ [D] ++ row2Walls ++ [C, W] ++ [C, W],
-              [W, P] ++ row9Dots ++ [P, W],
-              row13Walls ]
+
+
 
 data Direction = North
                | East
@@ -64,10 +53,8 @@ allDirections = [North, East, South, West]
 
 data Field = C --Corridor
            | D --Dot
-           | P --PowerDot
            | W --Wall
            | T --Teleporter
-           | H --Home
            | S --Pac-Man
            | G --Ghost
            deriving Eq
@@ -75,10 +62,8 @@ data Field = C --Corridor
 instance Show Field where
     show C = " "
     show D = "."
-    show P = "+"
     show W = "#"
     show T = "*"
-    show H = "_"
     show S = "S"
     show G = "G"
  
@@ -87,7 +72,7 @@ readStringFromFile path = do strings <- readFile ("src/Levels/" ++ path)
                              return $ lines strings
 
 loadLevels :: [IO [String]]
-loadLevels = map readStringFromFile ["Level 1.txt", "Level 2.txt", "Level 3.txt"]
+loadLevels = map readStringFromFile ["Level 1.txt", "Level 2.txt", "Level 3.txt", "Level 4.txt"]
  
 convertStringsToLevels :: [[String]] -> [Level]
 convertStringsToLevels []   = []

@@ -57,10 +57,7 @@ constructGameOverScreen = pictures [gameOverScreen, gameovertext, returntext]
 buildTile :: Float -> Float -> Field -> Picture
 buildTile x y W = translate x y wall
 buildTile x y T = translate x y teleporter
-buildTile x y H = translate x y home
 buildTile x y D = translate x y dot
-buildTile x y P = translate x y powerDot
--- buildTile x y S = translate x y pacMan
 buildTile x y G = translate x y ghost
 buildTile _ _ _ = blank
 
@@ -70,10 +67,15 @@ buildPacMan x y variable = translate x y pacManPicture
                          where pacManPicture = color yellow (thickArc (variable * 60) (-variable * 60) (fieldWidth / 5) 20)
                                                             -- thickArc wordt tegen de klok in getekend.
                                                             -- thickCircle radius thickness
+buildTeleporter :: Float -> Float -> Float -> Picture
+buildTeleporter x y 0        = translate x y teleporter
+buildTeleporter x y variable = translate x y teleporterPicture
+                             where teleporterPicture = color orange (thickCircle (variable * 20) 10)
 
 buildRow :: Float -> Float -> Float -> Row -> [Picture]
 buildRow _ _ _ []                    = []
 buildRow x y variable (S:fields)     = buildPacMan x y variable : buildRow (x + fieldWidth) y variable fields
+buildRow x y variable (T:fields)     = buildTeleporter x y variable : buildRow (x + fieldWidth) y variable fields
 buildRow x y variable (field:fields) = buildTile x y field      : buildRow (x + fieldWidth) y variable fields
 
 buildLevel :: Float -> Float -> Float -> Level -> [[Picture]]

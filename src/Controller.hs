@@ -33,7 +33,7 @@ update secs gstate
           -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
           if (selectCreature (currentLevel gstate) S) == Nothing
           then return $ gstate { typeOfState = GameOver }
-          else return $ GameState Playing (initialLevels gstate) updatedGhost 0 (currentScore gstate) (currentHighScore gstate)
+          else return $ gstate { typeOfState = Playing, currentLevel = updatedGhost, elapsedTime = 0 }
   -- We zitten in de PlayingState, maar de cyclus is nog bezig.
   | otherwise
   = -- Just update the elapsed time
