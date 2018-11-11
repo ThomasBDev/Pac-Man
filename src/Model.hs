@@ -14,12 +14,13 @@ nO_SECS_BETWEEN_CYCLES :: Float
 nO_SECS_BETWEEN_CYCLES = 1
 
 data GameState = GameState {
-                   typeOfState      :: TypeOfState
-                 , currentLevel     :: Level
-                 , elapsedTime      :: Float
-                 , currentScore     :: Int
-                 , currentHighScore :: Int
+                   typeOfState       :: TypeOfState
+                 , initialLevels     :: [Level]
+                 , currentLevel      :: Level
+                 , elapsedTime       :: Float
+                 , currentScore      :: Int
+                 , currentHighScore  :: Int
                  }
 
 initialState :: GameState
-initialState = GameState Title testLevel 0 0 0
+initialState = GameState Title [] [] 0 0 0

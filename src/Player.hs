@@ -27,6 +27,8 @@ updatedScore :: Bool -> Int -> Int
 updatedScore False score = score
 updatedScore True score = score + 100
 
+
+
 eatPacDot :: Int -> Int
 eatPacDot s = s + 100
 

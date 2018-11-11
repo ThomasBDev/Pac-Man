@@ -81,6 +81,27 @@ instance Show Field where
     show H = "_"
     show S = "S"
     show G = "G"
+ 
+readStringFromFile :: FilePath -> IO [String]
+readStringFromFile path = do strings <- readFile ("src/Levels/" ++ path)
+                             return $ lines strings
+
+loadLevels :: [IO [String]]
+loadLevels = map readStringFromFile ["Level 1.txt", "Level 2.txt", "Level 3.txt"]
+ 
+convertStringsToLevels :: [[String]] -> [Level]
+convertStringsToLevels []   = []
+convertStringsToLevels list = map (map (map convertCharToField)) list
+
+convertCharToField :: Char -> Field
+convertCharToField 'C' = C
+convertCharToField 'D' = D
+convertCharToField 'W' = W
+convertCharToField 'T' = T
+convertCharToField 'S' = S
+convertCharToField 'G' = G
+    
+    
     
 data Position = Pos Int Int
 

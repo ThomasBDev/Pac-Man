@@ -12,13 +12,16 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.IO.Game
 import System.Random
 
+import Data.Char
+
 -- | Handle one iteration of the game
 update :: Float -> GameState -> IO GameState
 update secs gstate
   | typeOfState gstate == Title    = do highscore <- loadScore
-                                        return $ gstate { currentHighScore = highscore }
+                                        levelStrings <- sequence loadLevels
+                                        return $ gstate { currentHighScore = highscore, initialLevels = convertStringsToLevels levelStrings }
   | typeOfState gstate == Paused   = return gstate
-  | typeOfState gstate == GameOver = do saveScore (currentHighScore gstate)
+  | typeOfState gstate == GameOver = return gstate
   
   -- We zitten in de PlayingState en 1 cyclus is voorbij.
   | elapsedTime gstate + secs > nO_SECS_BETWEEN_CYCLES
@@ -30,7 +33,7 @@ update secs gstate
           -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
           if (selectCreature (currentLevel gstate) S) == Nothing
           then return $ gstate { typeOfState = GameOver }
-          else return $ GameState Playing updatedGhost 0 (currentScore gstate) (currentHighScore gstate)
+          else return $ GameState Playing (initialLevels gstate) updatedGhost 0 (currentScore gstate) (currentHighScore gstate)
   -- We zitten in de PlayingState, maar de cyclus is nog bezig.
   | otherwise
   = -- Just update the elapsed time
@@ -43,13 +46,23 @@ input :: Event -> GameState -> IO GameState
 input e gstate = return (inputKey e gstate)
 
 inputKey :: Event -> GameState -> GameState                                                         
-inputKey (EventKey key Down _ _) gstate | typeOfState gstate == Title && key == SpecialKey KeySpace    = gstate { typeOfState = Playing }
+inputKey (EventKey key Down _ _) gstate | typeOfState gstate == Title                                  = selectLevel gstate key
                                         | typeOfState gstate == Playing                                = newGameState gstate key
                                         | typeOfState gstate == Paused && key == Char 'p'              = gstate { typeOfState = Playing }
                                         | typeOfState gstate == GameOver && key == SpecialKey KeySpace = initialState
                                         | otherwise                                                    = gstate
 inputKey _ gstate = gstate -- Otherwise keep the same
 
+selectLevel :: GameState -> Key -> GameState
+                              -- There are no levels to choose from, stay in the Title state.
+selectLevel gstate (Char c) | (initialLevels gstate == [])                              = gstate
+                            | let index = ord c - 49
+                              -- The (number) key pressed has a lower or higher value than there are levels.
+                              -- You can't select level N + 1 out of N levels.
+                              in index < 0 || index > length (initialLevels gstate) - 1 = gstate                               
+                            | otherwise                                                 = gstate { typeOfState = Playing, currentLevel = (initialLevels gstate) !! (ord c - 49) }
+selectLevel gstate _                                                                    = gstate
+                            
 newGameState :: GameState -> Key -> GameState
 newGameState gstate (SpecialKey KeyUp)    = gstate { currentLevel = updatedLevel (currentLevel gstate) North, currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) North) (currentScore gstate) }
 newGameState gstate (SpecialKey KeyRight) = gstate { currentLevel = updatedLevel (currentLevel gstate) East,  currentScore = updatedScore (checkDot (currentLevel gstate) (pacManIndex (currentLevel gstate)) East) (currentScore gstate) }
