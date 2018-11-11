@@ -37,7 +37,7 @@ highscoretext gstate | highscore > score = translate (-300) (-270) (scale 0.2 0.
                            score     = currentScore gstate
               
 begintext, titletext, pausetext, gameovertext, returntext :: Picture
-begintext = translate (-170) (-160) (scale 0.2 0.2 (color red (text "Press SPACEBAR to start!")))
+begintext = translate (-270) (-160) (scale 0.2 0.2 (color red (text "LEVEL SELECT: Press 1, 2, 3 or 4")))
 titletext = translate (-170) 160 (scale 0.2 0.2 (color red (text "PAC-MAN IN HASKELLAND" )))
 pausetext = color red (text "Pause")
 gameovertext = translate (-70) 0 (scale 0.2 0.2 (color red (text "Game over")))
