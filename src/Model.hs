@@ -18,9 +18,10 @@ data GameState = GameState {
                  , initialLevels     :: [Level]
                  , currentLevel      :: Level
                  , elapsedTime       :: Float
+                 , randomLevelIndex  :: Int
                  , currentScore      :: Int
                  , currentHighScore  :: Int
                  }
 
 initialState :: GameState
-initialState = GameState Title [] [] 0 0 0
+initialState = GameState Title [] [] 0 0 0 0

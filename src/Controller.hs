@@ -17,9 +17,10 @@ import Data.Char
 -- | Handle one iteration of the game
 update :: Float -> GameState -> IO GameState
 update secs gstate
-  | typeOfState gstate == Title    = do highscore <- loadScore
+  | typeOfState gstate == Title    = do highscore <- loadScore                                        
                                         levelStrings <- sequence loadLevels
-                                        return $ gstate { currentHighScore = highscore, initialLevels = convertStringsToLevels levelStrings }
+                                        randomLevel <- randomRIO (0, (length levelStrings))
+                                        return $ gstate { currentHighScore = highscore, initialLevels = convertStringsToLevels levelStrings, randomLevelIndex = randomLevel }
   | typeOfState gstate == Paused   = return gstate
   | typeOfState gstate == GameOver = return gstate
   
@@ -30,8 +31,8 @@ update secs gstate
     -- De Ghosts bewegen altijd, dus hun posities moeten hier worden aangepast?       
        do randomIndex <- randomRIO (0, 1)
           let updatedGhost = updatedLevelGhost (currentLevel gstate) randomIndex
-          -- Pac-Man is weg --> Ghost heeft Pac-Man gedood.
-          if (selectCreature (currentLevel gstate) S) == Nothing
+          -- Pac-Man of Ghost is weg --> Ghost en Pac-man zijn gebotst.
+          if ((selectCreature (currentLevel gstate) S) == Nothing) || ((selectCreature (currentLevel gstate) G) == Nothing)
           then return $ gstate { typeOfState = GameOver }
           else return $ gstate { typeOfState = Playing, currentLevel = updatedGhost, elapsedTime = 0 }
   -- We zitten in de PlayingState, maar de cyclus is nog bezig.
@@ -54,6 +55,7 @@ inputKey (EventKey key Down _ _) gstate | typeOfState gstate == Title           
 inputKey _ gstate = gstate -- Otherwise keep the same
 
 selectLevel :: GameState -> Key -> GameState
+selectLevel gstate (Char 'r')                                                           = gstate { typeOfState = Playing, currentLevel = initialLevels gstate !! randomLevelIndex gstate }
                               -- There are no levels to choose from, stay in the Title state.
 selectLevel gstate (Char c) | (initialLevels gstate == [])                              = gstate
                             | let index = ord c - 49
